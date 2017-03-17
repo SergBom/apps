@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PVDstat</title>
+    <!-- <x-compile> -->
+        <!-- <x-bootstrap> -->
+            <link rel="stylesheet" href="bootstrap.css">
+            <script src="undefined/ext-dev.js"></script>
+            <script src="bootstrap.js"></script>
+        <!-- </x-bootstrap> -->
+        <script type="text/javascript" src="app.js"></script>
+    <!-- </x-compile> -->
+    <link rel="stylesheet" href="http://cdn.sencha.com/ext/gpl/4.2.1/packages/ext-theme-classic/build/resources/ext-theme-classic-all.css">
+</head>
+<body>
+</body>
+</html>

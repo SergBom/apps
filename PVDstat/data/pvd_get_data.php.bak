@@ -1,0 +1,53 @@
+<?php
+include_once("../../../php/init.php");
+#header('Content-type: text/html; charset=utf-8');
+
+/*-------------------------- Входные переменные -----------------------------*/
+//$Org_id = trim ((!empty($_GET['org'])) ? $_GET['org'] : "1" ); // 
+/*---------------------------------------------------------------------------*/
+$n = 0;
+$port = 1521;
+$html = "<!DOCTYPE html><html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<title>PhonesBook</title>
+</head>
+<body>\n";
+
+
+    $db = ConnectOciDB('SB_PVD');
+
+	$sql = "SELECT * FROM T\$TLINK ORDER BY NAME_LINK";
+	$stid = oci_sql_exec($db, $sql);
+	
+	$html .= "<table border='1' cellspacing='0' cellpadding='1'>\n";
+	while($row = oci_fetch_array($stid)){
+		$n++;
+		
+		$fp = @fsockopen($row['CONN'],$port,$errno,$errstr,5);
+		    
+		if($fp){ //Если удачное соединение
+			$html .= "<tr style='color:green;background-color:#eeeeec'><td align='center'>".$n."</td>";
+			$html .= '<td>'.$row['NAME_TO']."</td><td>".$row['CONN']."</td><td> -> порт 1521 открыт</tr>\n";
+			fclose($fp);
+			
+			$st = oci_parse($db, 'begin dataimport(:p1); end;');
+			oci_bind_by_name($st, ':p1', $row['NAME_LINK']);
+			//oci_execute($st);
+			
+		} else { //Если неудачное соединение
+			$html .= '<tr style="color:red;background-color:#f57900;"><td>'.$n.'</td>';
+			$html .= '<td>'.$row['NAME_TO']."</td><td>".$row['CONN']."</td><td> -> порт 1521 закрыт</tr>\n";
+			$html .= '<td spancol=4>error num: '.$errno.' : '.$errstr;
+			
+		}
+	}
+	$html .= "</table>\n";
+	$html .= "</body></html>";
+
+	echo $html;
+	$fh = fopen("/var/www/portal/public_html/apps/PVDstat/data/pvd_get_data.html","w+");
+	fwrite( $fh, $html );
+	fclose( $fh );
+
+?>

@@ -1,0 +1,22 @@
+<?php
+include_once("../../../php/init.php");
+header('Content-type: text/html; charset=utf-8');
+
+$linkPVD = ConnectOciDB('PVDmy');
+
+//	print_r($linkPVD);
+
+//**********************************//
+// Выбираем все ПВДшки и проходим по каждой
+// Заносим все данные в нашу базу
+
+	$st = oci_sql_exec($linkPVD, "SELECT * FROM T\$TLINK");
+	$port = 1521;
+
+	while ($row = oci_fetch_assoc($st)) {
+
+
+	}
+	
+@oci_close($linkPVD);	
+?>
