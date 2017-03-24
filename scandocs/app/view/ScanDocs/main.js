@@ -78,7 +78,8 @@ Ext.define('Portal.view.ScanDocs.main', {
                                 {
                                     xtype: 'form',
                                     reference: 'formPanel',
-                                    height: 246,
+                                    border: false,
+                                    height: 218,
                                     id: 'formPanel',
                                     itemId: 'formPanel',
                                     bodyPadding: 4,
@@ -170,24 +171,22 @@ Ext.define('Portal.view.ScanDocs.main', {
                                 {
                                     xtype: 'form',
                                     reference: 'detailPanel',
+                                    height: 156,
                                     itemId: 'detailPanel',
                                     padding: 5,
                                     header: false,
                                     url: 'data/ScanDocs/stat1.json.php',
-                                    layout: {
-                                        type: 'vbox',
-                                        align: 'stretch',
-                                        padding: 5
-                                    },
                                     items: [
                                         {
                                             xtype: 'label',
-                                            flex: 1,
-                                            html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx</a>'
+                                            html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/</a><br>'
+                                        },
+                                        {
+                                            xtype: 'label',
+                                            html: '<a href="http://sp.rosreestr.ru:8082/uit/Lists/2017/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/Lists/2017/</a>'
                                         },
                                         {
                                             xtype: 'fieldset',
-                                            width: 259,
                                             layout: 'auto',
                                             title: '---',
                                             items: [
@@ -519,6 +518,17 @@ Ext.define('Portal.view.ScanDocs.main', {
                                             listeners: {
                                                 change: {
                                                     fn: 'onFilterRetroChange',
+                                                    scope: 'controller'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'button',
+                                            iconCls: 'icon-add',
+                                            text: 'Добавить ДПД',
+                                            listeners: {
+                                                click: {
+                                                    fn: 'onAddDPDClick',
                                                     scope: 'controller'
                                                 }
                                             }

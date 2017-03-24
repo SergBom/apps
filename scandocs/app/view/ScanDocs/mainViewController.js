@@ -85,6 +85,10 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
         this.ShowCadNums();
     },
 
+    onAddDPDClick: function(button, e, eOpts) {
+        Ext.create('Portal.view.ScanDocs.dpd').show();
+    },
+
     onPanelAfterRender: function(component, eOpts) {
         var AccessEdit = Portal.util.Util.appAccessEdit(this.getView().xtype),
             ref=this.getReferences();
