@@ -53,7 +53,7 @@ URL=file:///\\ARCHIVESHARE/Archive/". $dirScan . $DPD;
 	fclose( $fh );
 
 	//file_force_download2($temp_name);
-	$db->query( "UPDATE docs2 SET retro=1 WHERE id={$_POST['id']}" );
+	$db->query( "UPDATE docs_l1 SET retro=1 WHERE id={$_POST['id']}" );
 
 	// Копируем выбранное Дело для обработки в Платформе Ретроконверсии
 	full_copy($dir_source,$dir_dest . '/' . $params['name']);

@@ -32,12 +32,14 @@ Ext.define('Portal.view.ScanDocs.main', {
         'Ext.grid.Panel',
         'Ext.view.Table',
         'Ext.grid.column.Action',
+        'Ext.grid.filters.filter.List',
         'Ext.toolbar.Paging',
         'Ext.grid.filters.Filters',
         'Ext.grid.column.Date',
         'Ext.grid.column.Number',
         'Ext.grid.column.Boolean',
-        'Ext.tab.Bar'
+        'Ext.tab.Bar',
+        'Ext.grid.column.RowNumberer'
     ],
 
     controller: 'scandocsmain',
@@ -129,7 +131,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                                                     name: 'Otdel',
                                                     displayField: 'name',
                                                     store: 'ScanDocs.Otdel',
-                                                    valueField: 'n1'
+                                                    valueField: 'id'
                                                 }
                                             ]
                                         },
@@ -294,7 +296,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                                     width: 76,
                                     align: 'center',
                                     dataIndex: 'retro',
-                                    text: 'Обработка',
+                                    text: 'В Платформе',
                                     items: [
                                         {
                                             handler: function(view, rowIndex, colIndex, item, e, record, row) {
@@ -392,7 +394,6 @@ Ext.define('Portal.view.ScanDocs.main', {
                                         {
                                             handler: function(view, rowIndex, colIndex, item, e, record, row) {
                                                 var ed = Ext.create('Portal.view.ScanDocs.Files').show();
-                                                //ed.down('form').getForm().setValues(record.data);
                                                 ed.setTitle(record.data.name);
                                                 ed.getViewModel().getStore('storeFiles').load({params:{dir:record.data.name}});
                                             }
@@ -437,14 +438,16 @@ Ext.define('Portal.view.ScanDocs.main', {
                                     xtype: 'gridcolumn',
                                     flex: 2,
                                     dataIndex: 'n2',
-                                    text: 'Территориальный отдел'
+                                    text: 'Территориальный отдел',
+                                    filter: {
+                                        type: 'list'
+                                    }
                                 }
                             ],
                             dockedItems: [
                                 {
                                     xtype: 'pagingtoolbar',
                                     dock: 'bottom',
-                                    width: 360,
                                     displayInfo: true,
                                     store: 'ScanDocs.MainData',
                                     listeners: {
@@ -465,7 +468,6 @@ Ext.define('Portal.view.ScanDocs.main', {
                                             blankText: 'Поиск по номеру дела',
                                             emptyText: 'Поиск по номеру дела',
                                             listeners: {
-                                                change: 'onTextfieldChange',
                                                 specialkey: {
                                                     fn: 'onTextfieldSpecialkey',
                                                     scope: 'controller'
@@ -509,7 +511,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                                         {
                                             xtype: 'combobox',
                                             reference: 'FilterRetro',
-                                            emptyText: 'Фильтр по Обработке',
+                                            emptyText: 'Фильтр по ВПлатформе',
                                             displayField: 'name',
                                             valueField: 'id',
                                             bind: {
@@ -532,6 +534,19 @@ Ext.define('Portal.view.ScanDocs.main', {
                                                     scope: 'controller'
                                                 }
                                             }
+                                        },
+                                        {
+                                            xtype: 'button',
+                                            reference: 'btnRename',
+                                            disabled: true,
+                                            iconCls: 'icon-edit',
+                                            text: 'Переименовать ДПД',
+                                            listeners: {
+                                                click: {
+                                                    fn: 'onEditDPDClick',
+                                                    scope: 'controller'
+                                                }
+                                            }
                                         }
                                     ]
                                 }
@@ -539,8 +554,17 @@ Ext.define('Portal.view.ScanDocs.main', {
                             plugins: [
                                 {
                                     ptype: 'gridfilters'
+                                },
+                                {
+                                    ptype: 'gridfilters'
                                 }
-                            ]
+                            ],
+                            listeners: {
+                                selectionchange: {
+                                    fn: 'onMainSelectionChange',
+                                    scope: 'controller'
+                                }
+                            }
                         }
                     ]
                 },
@@ -708,6 +732,177 @@ Ext.define('Portal.view.ScanDocs.main', {
                             }
                         }
                     ]
+                },
+                {
+                    xtype: 'gridpanel',
+                    title: 'По отделам общая',
+                    bind: {
+                        store: '{statCommon}'
+                    },
+                    tabConfig: {
+                        xtype: 'tab',
+                        dock: 'left',
+                        iconCls: 'icon-stat1'
+                    },
+                    columns: [
+                        {
+                            xtype: 'rownumberer'
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            width: 200,
+                            dataIndex: 'name',
+                            text: 'Отдел'
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            defaults: {
+                                align: 'end',
+                                format: '0'
+                            },
+                            defaultWidth: 60,
+                            align: 'end',
+                            text: 'Количество ДПД переведенных в эл. форму по состоянию:',
+                            columns: [
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm01',
+                                    text: 'Январь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm02',
+                                    text: 'Февраль'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm03',
+                                    text: 'Март'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm04',
+                                    text: 'Апрель'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm05',
+                                    text: 'Май'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm06',
+                                    text: 'Июнь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm07',
+                                    text: 'Июль'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm08',
+                                    text: 'Август'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm09',
+                                    text: 'Сентябрь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm10',
+                                    text: 'Октябрь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm11',
+                                    text: 'Ноябрь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    dataIndex: 'm12',
+                                    text: 'Декабрь'
+                                },
+                                {
+                                    xtype: 'gridcolumn',
+                                    renderData: {
+                                        uiCls: 'f-bold'
+                                    },
+                                    dataIndex: 'summa',
+                                    text: 'Всего'
+                                }
+                            ]
+                        }
+                    ],
+                    dockedItems: [
+                        {
+                            xtype: 'toolbar',
+                            dock: 'top',
+                            items: [
+                                {
+                                    xtype: 'combobox',
+                                    reference: 'year',
+                                    editable: false,
+                                    emptyText: 'За какой год',
+                                    displayField: 'name',
+                                    valueField: 'name',
+                                    bind: {
+                                        store: '{vYears}'
+                                    },
+                                    listeners: {
+                                        change: {
+                                            fn: 'onYear2Change',
+                                            scope: 'controller'
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'button',
+                                    reference: 'btnCalc2',
+                                    disabled: true,
+                                    iconCls: 'icon-calculator',
+                                    text: 'Посчитать',
+                                    listeners: {
+                                        click: {
+                                            fn: 'onCalc2Click',
+                                            scope: 'controller'
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'button',
+                                    reference: 'btnCalc3',
+                                    disabled: true,
+                                    iconCls: 'icon-calculator',
+                                    text: 'Посчитать подробно',
+                                    listeners: {
+                                        click: {
+                                            fn: 'onCalc3Click',
+                                            scope: 'controller'
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'button',
+                                    iconCls: 'app-mime-excel',
+                                    text: 'MyButton',
+                                    listeners: {
+                                        click: {
+                                            fn: 'onExcel1Click',
+                                            scope: 'controller'
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    listeners: {
+                        activate: {
+                            fn: 'onTabCommonActivate',
+                            scope: 'controller'
+                        }
+                    }
                 }
             ]
         }
@@ -717,10 +912,6 @@ Ext.define('Portal.view.ScanDocs.main', {
             fn: 'onPanelAfterRender',
             scope: 'controller'
         }
-    },
-
-    onTextfieldChange: function(field, newValue, oldValue, eOpts) {
-        //this.getController().ShowCadNums(newValue);
     },
 
     onPanelActivate: function(component, eOpts) {

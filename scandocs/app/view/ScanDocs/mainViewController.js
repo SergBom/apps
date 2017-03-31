@@ -23,11 +23,13 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
             o=r.FilterOpis.getValue(),
             fr=r.FilterRetro.getValue(),
             s=r.seek.getValue();
-        Ext.getStore('ScanDocs.MainData').load({params:{
+        Ext.getStore('ScanDocs.MainData').loadPage(1,{params:{
         dateBegin:frm.findField('dateBegin').getValue(),
         dateEnd:frm.findField('dateEnd').getValue(),
         Otdel:frm.findField('Otdel').getValue(),
-        cyear:'',opis:o,retro:fr,filter:s}});
+        cyear:'',opis:o,retro:fr,filter:s,
+            limit:25,start:0
+        }});
     },
 
     onCalcClick: function(button, e, eOpts) {
@@ -53,7 +55,11 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
         var r=this.getReferences();
         r.formPanel.getForm().reset();
         r.detailPanel.getForm().load();
-        Ext.getStore('ScanDocs.MainData').load();
+        Ext.getStore('ScanDocs.MainData').setConfig({
+            otdel:'',
+        });
+
+        Ext.getStore('ScanDocs.MainData').loadPage(1);
     },
 
     onPTbarChange: function(pagingtoolbar, pageData, eOpts) {
@@ -87,6 +93,54 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
 
     onAddDPDClick: function(button, e, eOpts) {
         Ext.create('Portal.view.ScanDocs.dpd').show();
+    },
+
+    onEditDPDClick: function(button, e, eOpts) {
+        w=Ext.create('Portal.view.ScanDocs.rename').show();
+        w.down("form").getForm().setValues(this.getReferences().tblMain.getSelection()[0].data);
+    },
+
+    onMainSelectionChange: function(model, selected, eOpts) {
+        this.getReferences().btnRename.setDisabled(selected.length===0);
+    },
+
+    onYear2Change: function(field, newValue, oldValue, eOpts) {
+        var r=this.getReferences();
+        r.btnCalc2.setDisabled(false);
+        r.btnCalc3.setDisabled(false);
+    },
+
+    onCalc2Click: function(button, e, eOpts) {
+        var y=this.getReferences().year.getValue();
+        this.getStore('statCommon').load({params:{
+            year:y,type:1
+        }});
+    },
+
+    onCalc3Click: function(button, e, eOpts) {
+        var y=this.getReferences().year.getValue();
+        this.getStore('statCommon').load({params:{
+            year:y,type:2
+        }});
+    },
+
+    onExcel1Click: function(button, e, eOpts) {
+        var y=this.getReferences().year.getValue();
+        Ext.Ajax.request({
+            url: 'data/ScanDocs/excel1.php',
+            year:y,
+            success: function(response, opts) {
+                var obj = Ext.decode(response.responseText);
+                console.dir(obj);
+            },
+            failure: function(response, opts) {
+                console.log('server-side failure with status code ' + response.status);
+            }
+        });
+    },
+
+    onTabCommonActivate: function(component, eOpts) {
+        this.getStore('vYears').load();
     },
 
     onPanelAfterRender: function(component, eOpts) {

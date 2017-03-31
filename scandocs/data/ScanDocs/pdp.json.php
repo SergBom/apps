@@ -52,9 +52,8 @@ $data = array();
 	
 	//$sql = "select * from `v#docs2` p2 where p2.tp=1 $begin  $end  $otdel $cyear $filter";
 	
-	$sql = "SELECT SQL_CALC_FOUND_ROWS  * FROM docs2 AS c
+	$sql = "SELECT SQL_CALC_FOUND_ROWS  * FROM docs_l1 AS c
 		WHERE 1=1
-			and par_id =0
 			AND name not regexp '51 [0-9][0-9] [0-9][0-9][0-9][0-9][0-9][0-9][0-9] [0-9].*'";
 	
 	$sql .= " ORDER BY name";

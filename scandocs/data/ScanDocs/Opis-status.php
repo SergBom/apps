@@ -1,12 +1,12 @@
 <?php
-$isCLI = ( php_sapi_name() == 'cli' );
+/*$isCLI = ( php_sapi_name() == 'cli' );
 if($isCLI){
 	include_once("/var/www/portal/public_html/php/init.php");
 	$cr = "\n";
 }else{
 	include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init.php");
 	$cr = "<br>";
-}
+}*/
 header('Content-type: text/html; charset=utf-8');
 
 

@@ -10,7 +10,7 @@ header('Content-type: text/html; charset=utf-8');
 
 /*---------------------------------------------------------------------------*/
 
-	$db->query( "UPDATE docs2 SET retro=1 WHERE id={$_POST['id']}" );
+	$db->query( "UPDATE docs_l1 SET retro=1 WHERE id={$_POST['id']}" );
 
 	$c = array('success'=>0); //,'file'=>'data/ScanDocs/temp/'.$temp_URL,'folder'=>$DPD);
 	echo json_encode($c);

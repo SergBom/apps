@@ -105,6 +105,75 @@ Ext.define('Portal.view.ScanDocs.mainViewModel', {
                     name: 'name'
                 }
             ]
+        },
+        vYears: {
+            proxy: {
+                type: 'ajax',
+                url: 'data/ScanDocs/getYears.php',
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
+            fields: [
+                {
+                    name: 'name'
+                }
+            ]
+        },
+        statCommon: {
+            proxy: {
+                type: 'ajax',
+                url: 'data/ScanDocs/statCommon.php',
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
+            fields: [
+                {
+                    name: 'name'
+                },
+                {
+                    name: 'm01'
+                },
+                {
+                    name: 'm02'
+                },
+                {
+                    name: 'm03'
+                },
+                {
+                    name: 'm04'
+                },
+                {
+                    name: 'm05'
+                },
+                {
+                    name: 'm06'
+                },
+                {
+                    name: 'm07'
+                },
+                {
+                    name: 'm08'
+                },
+                {
+                    name: 'm09'
+                },
+                {
+                    name: 'm10'
+                },
+                {
+                    name: 'm11'
+                },
+                {
+                    name: 'm12'
+                },
+                {
+                    name: 'summa'
+                }
+            ]
         }
     }
 

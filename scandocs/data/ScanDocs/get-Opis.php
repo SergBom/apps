@@ -31,7 +31,7 @@ AND ( ro.CAD_NUM = '$CAD_NUM' OR ro.OBJ_NUM = '$CAD_NUM')";
 	$row = oci_fetch_array($stid);
 	$cnt = $row['CNT'];
 	
-	$pdo->query( "UPDATE docs2 SET opis=$cnt WHERE id={$_POST['id']}" );
+	$pdo->query( "UPDATE docs_l1 SET opis=$cnt WHERE id={$_POST['id']}" );
 		
 	$c = array('success'=>0,'opis'=>$cnt);
 	echo json_encode($c);

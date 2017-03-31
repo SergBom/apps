@@ -29,6 +29,7 @@ Ext.define('Portal.controller.ScanDocs.ScanDocs', {
     views: [
         'ScanDocs.main',
         'ScanDocs.Files',
-        'ScanDocs.dpd'
+        'ScanDocs.dpd',
+        'ScanDocs.rename'
     ]
 });

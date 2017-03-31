@@ -28,39 +28,26 @@ $data = array();
 	$cyear = ( @is_numeric($params['cyear']) )     ? " AND p2.cyear = {$params['cyear']}" : "";
 	$otdel = ( @$params['Otdel'] )     ? " AND p2.n1 = ".@$params['Otdel']." " : "";
 
-
-	//$sql = "select count(*) from `v#docs2` p2 where p2.tp=1 $begin  $end  $otdel $cyear ";
-	$cnt_dpd = $db->query("select count(*) from `v#docs2` p2 where p2.tp=1 $begin  $end  $otdel $cyear ")->fetchColumn();
-	$opis_dpd = $db->query("select count(*) from `v#docs2` p2 where p2.tp=1 and p2.opis=1 $begin  $end  $otdel $cyear ")->fetchColumn();
-	$retro_dpd = $db->query("select count(*) from `v#docs2` p2 where p2.tp=1 and p2.retro=2 $begin  $end  $otdel $cyear ")->fetchColumn();
-	//echo "$sql<br>";
 	
-	//$sql = "select ";
-	//$sql .= "(select count(*) from `v#docs2` where tp=2 $begin  $end  $otdel $cyear ) as count_dpd,";
-	//$sql .= "(select IFNULL(round(sum(cnt_size)/(1024*1024*1024),1),0) from `v#docs2` where (tp=3 or tp=4) $begin  $end  $otdel $cyear) as count_size,";
-	//$sql .= "(select count(*) from `v#docs2` where tp=3  $begin  $end  $otdel $cyear ) as count_files";
-
-/*	$sql = "SELECT round(count(*)/2,1) cnt_files, IFNULL(round(sum(c.cnt_size)/(1024*1024*1024),2),0) cnt_size
-					FROM docs2 AS c
-					LEFT JOIN docs2 As p1 ON c.par_id = p1.id
-					LEFT JOIN `v#docs2` As p2 ON p1.par_id = p2.id
-					WHERE c.par_id IS NOT NULL AND p2.tp=1	$begin  $end  $otdel $cyear
-				";
-	//echo "$sql<br>";
+	$sql = "select * from 
+	(select count(*) count_dpd   from `v_docs3` p2 where 0=0  $begin  $end  $otdel $cyear ) t1,
+	(select count(*) count_opis  from `v_docs3` p2 where p2.opis=1 $begin  $end  $otdel $cyear ) t2,
+	(select count(*) count_retro from `v_docs3` p2 where p2.retro=2 $begin  $end  $otdel $cyear ) t3";
 	
-	if ( $result = $db->query( $sql ) ) {
-
-		$row = $result->fetch_assoc();
-	*/	
-			echo "{
-				success: true,
-				data: {
-					count_dpd: ".$cnt_dpd.",
-					count_opis: ".$opis_dpd.",
-					count_retro: ".$retro_dpd."
-				}
-			}";
+	
+	
+	
+	$data = $db->query(	$sql )->fetch() ; //PDO::FETCH_COLUMN);
+	//print_r($data);
+	
+echo "{
+	success: true,
+	data: {
+		count_dpd: "  .$data['count_dpd'].",
+		count_opis: " .$data['count_opis'].",
+		count_retro: ".$data['count_retro']."
+	}
+}";
 		
-	//}  $row['cnt_size'].",".$row['cnt_files']."
 }
 ?>

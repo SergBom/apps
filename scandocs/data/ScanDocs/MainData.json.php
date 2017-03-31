@@ -49,6 +49,19 @@ $data = array();
 	$otdel = ( @$params['Otdel'] )     ? " AND p2.n1=".@$params['Otdel']." " : "";
 	$filter = ( @$params['filter'] )     ? " AND name like '%".trim(@$params['filter'])."%' " : "";
 	
+/*	if( $filter ){
+		$limit=25;
+		$page =1;
+		$start=0;
+	} else {
+		$limit=$params['limit'];
+		$page =$params['page'];
+		$start=$params['start'];
+	}
+	*/	
+	
+	
+	
 	$opis = ""; 
 	if( $params['opis']<8 and $params['opis']<>'' ){
 		$opis = " AND opis=".$params['opis'] ;
@@ -57,8 +70,8 @@ $data = array();
 	$retro = ( $params['retro']<>'' and $params['retro']<8 ) ? " AND retro=".$params['retro'] : "" ;
 	
 	
-	$sql = "select SQL_CALC_FOUND_ROWS * from `v#docs2` p2 where p2.tp=1 $begin  $end  $otdel $cyear $opis $retro $filter";
-	$sql .= " ORDER BY p2.n2, p2.name";
+	$sql = "select SQL_CALC_FOUND_ROWS * from `v_docs3` p2 where 0=0 $begin  $end  $otdel $cyear $opis $retro $filter";
+	$sql .= " ORDER BY p2.n1, p2.name";
 	$sql .= " LIMIT $start,$limit";
 	
 	//echo $sql;

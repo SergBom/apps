@@ -57,6 +57,12 @@ Ext.define('Portal.model.ScanDocs.MainData', {
         },
         {
             name: 'retro'
+        },
+        {
+            name: 'path'
+        },
+        {
+            name: 'cadraion'
         }
     ]
 });

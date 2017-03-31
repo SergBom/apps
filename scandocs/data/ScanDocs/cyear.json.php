@@ -12,7 +12,7 @@ header('Content-type: text/html; charset=utf-8');
 
 	$data = array();
 	
-	$sql = "SELECT DISTINCT cyear FROM docs2 ORDER BY cyear";
+	$sql = "SELECT DISTINCT cyear FROM docs_l1 ORDER BY cyear";
 	if ( $result = $db->query( $sql ) ) {
 
 		array_push($data, array("cyear"=>"*"));

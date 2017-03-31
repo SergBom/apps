@@ -30,17 +30,15 @@ foreach( $dpd_list as $dpd ){
 	
 		if( preg_match("/^\d\d \d\d \d\d\d\d\d\d\d \d+$/", $dpd) ){
 
-			$c = $pdo->query("SELECT count(*) FROM docs2 WHERE `name`='$dpd'")->fetchColumn();
+			$c = $pdo->query("SELECT count(*) FROM docs_l1 WHERE `name`='$dpd'")->fetchColumn();
 			if( $c ){
 				//$sql  = "UPDATE docs2 ";
 				//$sql2 = "WHERE";
 				$count_bad++;
 				$err_dpd .= $dpd . " - Дубликат" . $cr;
 			} else {
-				$sql = "INSERT INTO docs2 SET 
-					`par_id`=0,
+				$sql = "INSERT INTO docs_l1 SET 
 					`name`='$dpd',
-					`tp`=1,
 					`cdate`='{$_POST['dpd_date']}',
 					`opis`=1,
 					`retro`=2";
