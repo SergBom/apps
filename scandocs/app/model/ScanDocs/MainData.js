@@ -14,55 +14,55 @@
  */
 
 Ext.define('Portal.model.ScanDocs.MainData', {
-    extend: 'Ext.data.Model',
-    alias: 'model.MainData',
+  extend: 'Ext.data.Model',
+  alias: 'model.MainData',
 
-    requires: [
-        'Ext.data.field.Field'
-    ],
+  requires: [
+    'Ext.data.field.Field'
+  ],
 
-    fields: [
-        {
-            name: 'id'
-        },
-        {
-            name: 'cdate'
-        },
-        {
-            name: 'cad_name'
-        },
-        {
-            name: 'cnt_files'
-        },
-        {
-            name: 'cnt_size'
-        },
-        {
-            name: 'name'
-        },
-        {
-            name: 'n2'
-        },
-        {
-            name: 'n1'
-        },
-        {
-            name: 'cyear'
-        },
-        {
-            name: 'par_id'
-        },
-        {
-            name: 'opis'
-        },
-        {
-            name: 'retro'
-        },
-        {
-            name: 'path'
-        },
-        {
-            name: 'cadraion'
-        }
-    ]
+  fields: [
+    {
+      name: 'id'
+    },
+    {
+      name: 'cdate'
+    },
+    {
+      name: 'cad_name'
+    },
+    {
+      name: 'cnt_files'
+    },
+    {
+      name: 'cnt_size'
+    },
+    {
+      name: 'name'
+    },
+    {
+      name: 'n2'
+    },
+    {
+      name: 'n1'
+    },
+    {
+      name: 'cyear'
+    },
+    {
+      name: 'par_id'
+    },
+    {
+      name: 'opis'
+    },
+    {
+      name: 'retro'
+    },
+    {
+      name: 'path'
+    },
+    {
+      name: 'cadraion'
+    }
+  ]
 });

@@ -14,6 +14,6 @@
  */
 
 Ext.define('Portal.view.ScanDocs.FilesViewController', {
-    extend: 'Ext.app.ViewController',
-    alias: 'controller.scandocsfiles'
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.scandocsfiles'
 });

@@ -14,31 +14,31 @@
  */
 
 Ext.define('Portal.model.ScanDocs.District', {
-    extend: 'Ext.data.Model',
-    alias: 'model.District',
+  extend: 'Ext.data.Model',
+  alias: 'model.District',
 
-    requires: [
-        'Ext.data.field.Field'
-    ],
+  requires: [
+    'Ext.data.field.Field'
+  ],
 
-    fields: [
-        {
-            name: 'id'
-        },
-        {
-            name: 'cadnum'
-        },
-        {
-            name: 'district_id'
-        },
-        {
-            name: 'name'
-        },
-        {
-            name: 'n2'
-        },
-        {
-            name: 'n1'
-        }
-    ]
+  fields: [
+    {
+      name: 'id'
+    },
+    {
+      name: 'cadnum'
+    },
+    {
+      name: 'district_id'
+    },
+    {
+      name: 'name'
+    },
+    {
+      name: 'n2'
+    },
+    {
+      name: 'n1'
+    }
+  ]
 });

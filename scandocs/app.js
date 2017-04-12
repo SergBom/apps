@@ -20,14 +20,14 @@ Ext.Loader.setConfig({
 
 
 Ext.application({
-    controllers: [
-        'ScanDocs.ScanDocs'
-    ],
-    name: 'Portal',
+  controllers: [
+    'ScanDocs.ScanDocs'
+  ],
+  name: 'Portal',
 
-    launch: function() {
-        Ext.create('Portal.view.ScanDocs.main', {renderTo: Ext.getBody()});
-        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
-    }
+  launch: function() {
+    Ext.create('Portal.view.ScanDocs.main', {renderTo: Ext.getBody()});
+    Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+  }
 
 });

@@ -14,30 +14,30 @@
  */
 
 Ext.define('Portal.store.ScanDocs.District', {
-    extend: 'Ext.data.Store',
-    alias: 'store.District',
+  extend: 'Ext.data.Store',
+  alias: 'store.District',
 
-    requires: [
-        'Portal.model.ScanDocs.District',
-        'Ext.data.proxy.Ajax',
-        'Ext.data.reader.Json'
-    ],
+  requires: [
+    'Portal.model.ScanDocs.District',
+    'Ext.data.proxy.Ajax',
+    'Ext.data.reader.Json'
+  ],
 
-    constructor: function(cfg) {
-        var me = this;
-        cfg = cfg || {};
-        me.callParent([Ext.apply({
-            storeId: 'ScanDocs.District',
-            autoLoad: false,
-            model: 'Portal.model.ScanDocs.District',
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/district.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            }
-        }, cfg)]);
-    }
+  constructor: function(cfg) {
+    var me = this;
+    cfg = cfg || {};
+    me.callParent([Ext.apply({
+      storeId: 'ScanDocs.District',
+      autoLoad: false,
+      model: 'Portal.model.ScanDocs.District',
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/district.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      }
+    }, cfg)]);
+  }
 });

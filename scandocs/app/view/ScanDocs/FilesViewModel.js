@@ -14,48 +14,48 @@
  */
 
 Ext.define('Portal.view.ScanDocs.FilesViewModel', {
-    extend: 'Ext.app.ViewModel',
-    alias: 'viewmodel.scandocsfiles',
+  extend: 'Ext.app.ViewModel',
+  alias: 'viewmodel.scandocsfiles',
 
-    requires: [
-        'Ext.data.Store',
-        'Ext.data.proxy.Ajax',
-        'Ext.data.reader.Json',
-        'Ext.data.field.Number'
-    ],
+  requires: [
+    'Ext.data.Store',
+    'Ext.data.proxy.Ajax',
+    'Ext.data.reader.Json',
+    'Ext.data.field.Number'
+  ],
 
-    stores: {
-        storeFiles: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/Files.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'id'
-                },
-                {
-                    name: 'files'
-                },
-                {
-                    type: 'float',
-                    name: 'cnt_size'
-                },
-                {
-                    name: 'cdate'
-                },
-                {
-                    name: 'ext'
-                },
-                {
-                    name: 'fname'
-                }
-            ]
+  stores: {
+    storeFiles: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/Files.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
         }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'files'
+        },
+        {
+          type: 'float',
+          name: 'cnt_size'
+        },
+        {
+          name: 'cdate'
+        },
+        {
+          name: 'ext'
+        },
+        {
+          name: 'fname'
+        }
+      ]
     }
+  }
 
 });

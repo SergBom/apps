@@ -134,13 +134,10 @@ $objPHPExcel->getActiveSheet()->mergeCells('A2:N2');
 			$sql = "CALL `statCommon2`('{$year}',{$row_otdels['id']})");
 		}
 		
-			$d = $db->query( $sql );
+			//$d = $db->query( $sql );
 		
 					//->fetchAll(); //PDO::FETCH_COLUMN);
-		while( $row = $d->fetch() ){
-
-
-
+			$row = $db->query( $sql )->fetch(PDO::FETCH_BOTH) ){
 		
 			// Суммируем по месяцам
 			for($i=0; $i<=13; $i++ ){
@@ -149,7 +146,7 @@ $objPHPExcel->getActiveSheet()->mergeCells('A2:N2');
 				
 				if($i>0 and $i<13){
 					$o = str_pad($i, 2, "0", STR_PAD_LEFT);
-					$Summ["m$o"] = $Summ["m$o"] + $d[0]["m$o"];
+					$Summ["m$o"] = $Summ["m$o"] + $row[$i];
 				}	
 			}
 
@@ -158,8 +155,8 @@ $objPHPExcel->getActiveSheet()->mergeCells('A2:N2');
 			$d[0] = array('name'=>$row_otdels['name']) + $d[0] ;
 			$d[0]["summa"] = 	"<b>" .	$d[0]["summa"] . "</b>";
 
-			array_push($data,$d[0]);
-		}
+			//array_push($data,$d[0]);
+		//}
 		$str_num++;
 	}
 

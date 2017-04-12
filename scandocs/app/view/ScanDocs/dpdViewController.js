@@ -14,37 +14,37 @@
  */
 
 Ext.define('Portal.view.ScanDocs.dpdViewController', {
-    extend: 'Ext.app.ViewController',
-    alias: 'controller.scandocs.dpd',
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.scandocs.dpd',
 
-    onSaveClick: function(button, e, eOpts) {
-        var m=this;
-        m.getReferences().form.getForm().submit({
-            clientValidation: true,
-            url: 'data/ScanDocs/saveDPD.php',
-            success: function(form, action) {
-                Ext.Msg.alert('Обработано', action.result.msg);
-                Ext.getStore('ScanDocs.MainData').reload();
-                m.getView().close();
-            },
-            failure: function(form, action) {
-                switch (action.failureType) {
-                    case Ext.form.action.Action.CLIENT_INVALID:
-                    Ext.Msg.alert('Ошибка', 'Form fields may not be submitted with invalid values');
-                    break;
-                    case Ext.form.action.Action.CONNECT_FAILURE:
-                    Ext.Msg.alert('Ошибка', 'Ajax communication failed');
-                    break;
-                    case Ext.form.action.Action.SERVER_INVALID:
-                    Ext.Msg.alert('Ошибка', action.result.msg);
-                }
-                m.getView().close();
-            }
-        });
-    },
+  onSaveClick: function(button, e, eOpts) {
+    var m=this;
+    m.getReferences().form.getForm().submit({
+      clientValidation: true,
+      url: 'data/ScanDocs/saveDPD.php',
+      success: function(form, action) {
+        Ext.Msg.alert('Обработано', action.result.msg);
+        Ext.getStore('ScanDocs.MainData').reload();
+        m.getView().close();
+      },
+      failure: function(form, action) {
+        switch (action.failureType) {
+          case Ext.form.action.Action.CLIENT_INVALID:
+          Ext.Msg.alert('Ошибка', 'Form fields may not be submitted with invalid values');
+          break;
+          case Ext.form.action.Action.CONNECT_FAILURE:
+          Ext.Msg.alert('Ошибка', 'Ajax communication failed');
+          break;
+          case Ext.form.action.Action.SERVER_INVALID:
+          Ext.Msg.alert('Ошибка', action.result.msg);
+        }
+        m.getView().close();
+      }
+    });
+  },
 
-    onCancelClick: function(button, e, eOpts) {
-        this.getView().close();
-    }
+  onCancelClick: function(button, e, eOpts) {
+    this.getView().close();
+  }
 
 });

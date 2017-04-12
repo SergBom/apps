@@ -14,912 +14,913 @@
  */
 
 Ext.define('Portal.view.ScanDocs.main', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.scandocs',
+  extend: 'Ext.panel.Panel',
+  alias: 'widget.scandocs',
 
-    requires: [
-        'Portal.view.ScanDocs.mainViewModel',
-        'Portal.view.ScanDocs.mainViewController',
-        'Ext.tab.Panel',
-        'Ext.tab.Tab',
-        'Ext.form.Panel',
-        'Ext.form.FieldSet',
-        'Ext.form.field.Date',
-        'Ext.form.field.ComboBox',
-        'Ext.form.FieldContainer',
-        'Ext.form.Label',
-        'Ext.form.field.Display',
-        'Ext.grid.Panel',
-        'Ext.view.Table',
-        'Ext.grid.column.Action',
-        'Ext.grid.filters.filter.List',
-        'Ext.toolbar.Paging',
-        'Ext.grid.filters.Filters',
-        'Ext.grid.column.Date',
-        'Ext.grid.column.Number',
-        'Ext.grid.column.Boolean',
-        'Ext.tab.Bar',
-        'Ext.grid.column.RowNumberer'
-    ],
+  requires: [
+    'Portal.view.ScanDocs.mainViewModel',
+    'Portal.view.ScanDocs.mainViewController',
+    'Ext.tab.Panel',
+    'Ext.tab.Tab',
+    'Ext.form.Panel',
+    'Ext.form.FieldSet',
+    'Ext.form.field.Date',
+    'Ext.form.field.ComboBox',
+    'Ext.form.FieldContainer',
+    'Ext.form.Label',
+    'Ext.form.field.Display',
+    'Ext.grid.Panel',
+    'Ext.view.Table',
+    'Ext.grid.column.Action',
+    'Ext.grid.filters.filter.List',
+    'Ext.toolbar.Paging',
+    'Ext.grid.filters.Filters',
+    'Ext.grid.column.Date',
+    'Ext.grid.column.Number',
+    'Ext.grid.column.Boolean',
+    'Ext.tab.Bar',
+    'Ext.grid.column.RowNumberer'
+  ],
 
-    controller: 'scandocsmain',
-    viewModel: {
-        type: 'scandocsmain'
-    },
-    autoShow: true,
-    height: 633,
-    width: 801,
-    layout: 'fit',
-    title: 'Статистика по отсканированным документам ДПД',
-    defaultListenerScope: true,
+  controller: 'scandocsmain',
+  viewModel: {
+    type: 'scandocsmain'
+  },
+  autoShow: true,
+  height: 633,
+  width: 801,
+  layout: 'fit',
+  title: 'Статистика по отсканированным документам ДПД',
+  defaultListenerScope: true,
 
-    items: [
+  items: [
+    {
+      xtype: 'tabpanel',
+      reference: 'TabMain',
+      activeTab: 0,
+      items: [
         {
-            xtype: 'tabpanel',
-            reference: 'TabMain',
-            activeTab: 0,
-            items: [
+          xtype: 'panel',
+          reference: 'TabStat',
+          layout: 'border',
+          iconCls: 'icon-stat1',
+          title: 'Статистика',
+          items: [
+            {
+              xtype: 'panel',
+              region: 'west',
+              split: true,
+              width: 283,
+              title: 'Общая информация',
+              layout: {
+                type: 'vbox',
+                align: 'stretch'
+              },
+              items: [
                 {
-                    xtype: 'panel',
-                    reference: 'TabStat',
-                    layout: 'border',
-                    iconCls: 'icon-stat1',
-                    title: 'Статистика',
-                    items: [
+                  xtype: 'form',
+                  reference: 'formPanel',
+                  border: false,
+                  height: 218,
+                  id: 'formPanel',
+                  itemId: 'formPanel',
+                  bodyPadding: 4,
+                  header: false,
+                  items: [
+                    {
+                      xtype: 'fieldset',
+                      title: 'Период',
+                      items: [
                         {
-                            xtype: 'panel',
-                            region: 'west',
-                            split: true,
-                            width: 283,
-                            title: 'Общая информация',
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            items: [
-                                {
-                                    xtype: 'form',
-                                    reference: 'formPanel',
-                                    border: false,
-                                    height: 218,
-                                    id: 'formPanel',
-                                    itemId: 'formPanel',
-                                    bodyPadding: 4,
-                                    header: false,
-                                    items: [
-                                        {
-                                            xtype: 'fieldset',
-                                            title: 'Период',
-                                            items: [
-                                                {
-                                                    xtype: 'datefield',
-                                                    fieldLabel: 'Начало',
-                                                    labelWidth: 50,
-                                                    name: 'dateBegin',
-                                                    format: 'Y-m-d',
-                                                    submitFormat: 'Y-m-d'
-                                                },
-                                                {
-                                                    xtype: 'datefield',
-                                                    fieldLabel: 'Конец',
-                                                    labelWidth: 50,
-                                                    name: 'dateEnd',
-                                                    format: 'Y-m-d',
-                                                    submitFormat: 'Y-m-d'
-                                                },
-                                                {
-                                                    xtype: 'combobox',
-                                                    anchor: '100%',
-                                                    hidden: true,
-                                                    fieldLabel: 'За какой год',
-                                                    name: 'cyear',
-                                                    displayField: 'cyear',
-                                                    valueField: 'cyear',
-                                                    bind: {
-                                                        store: '{cyear}'
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            xtype: 'fieldset',
-                                            title: 'Территориальный Отдел',
-                                            items: [
-                                                {
-                                                    xtype: 'combobox',
-                                                    anchor: '100%',
-                                                    name: 'Otdel',
-                                                    displayField: 'name',
-                                                    store: 'ScanDocs.Otdel',
-                                                    valueField: 'id'
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            xtype: 'fieldcontainer',
-                                            height: 36,
-                                            width: 283,
-                                            layout: 'fit',
-                                            items: [
-                                                {
-                                                    xtype: 'button',
-                                                    id: 'Calc',
-                                                    itemId: 'Calc',
-                                                    iconCls: 'icon-calc',
-                                                    text: 'Посчитать',
-                                                    listeners: {
-                                                        click: {
-                                                            fn: 'onCalcClick',
-                                                            scope: 'controller'
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    xtype: 'button',
-                                                    id: 'Reset',
-                                                    itemId: 'Reset',
-                                                    text: 'Сброс',
-                                                    listeners: {
-                                                        click: {
-                                                            fn: 'onResetClick',
-                                                            scope: 'controller'
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'form',
-                                    reference: 'detailPanel',
-                                    height: 156,
-                                    itemId: 'detailPanel',
-                                    padding: 5,
-                                    header: false,
-                                    url: 'data/ScanDocs/stat1.json.php',
-                                    items: [
-                                        {
-                                            xtype: 'label',
-                                            html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/</a><br>'
-                                        },
-                                        {
-                                            xtype: 'label',
-                                            html: '<a href="http://sp.rosreestr.ru:8082/uit/Lists/2017/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/Lists/2017/</a>'
-                                        },
-                                        {
-                                            xtype: 'fieldset',
-                                            layout: 'auto',
-                                            title: '---',
-                                            items: [
-                                                {
-                                                    xtype: 'displayfield',
-                                                    reference: 'count_dpd',
-                                                    fieldLabel: 'Количество дел',
-                                                    name: 'count_dpd',
-                                                    value: 'считаю...'
-                                                },
-                                                {
-                                                    xtype: 'displayfield',
-                                                    reference: 'count_opis',
-                                                    fieldLabel: 'С описями',
-                                                    name: 'count_opis',
-                                                    value: 'считаю...'
-                                                },
-                                                {
-                                                    xtype: 'displayfield',
-                                                    reference: 'count_retro',
-                                                    fieldLabel: 'В Платформе',
-                                                    name: 'count_retro',
-                                                    value: 'считаю...'
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'panel',
-                                    flex: 1,
-                                    hidden: true,
-                                    html: '<p align="center"> <font color="green"> Информация!<br> В подсчете ДПД используется дата создания каталога с кадастровым номерм дела.<br> Поэтому загруженные Тома в дело, загруженное ранее в статистику <u>не попадают</u>. </font> </p><p align="center"> <font color="blue">Дважды кликнув левой кнопкой мышки на любом деле, откроется список загруженных файлов</font></p>',
-                                    scrollable: true,
-                                    header: false
-                                }
-                            ]
+                          xtype: 'datefield',
+                          fieldLabel: 'Начало',
+                          labelWidth: 50,
+                          name: 'dateBegin',
+                          format: 'Y-m-d',
+                          submitFormat: 'Y-m-d'
                         },
                         {
-                            xtype: 'gridpanel',
-                            region: 'center',
-                            split: false,
-                            reference: 'tblMain',
-                            title: 'Табличные данные',
-                            store: 'ScanDocs.MainData',
-                            columns: [
-                                {
-                                    xtype: 'actioncolumn',
-                                    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
-                                        switch(value){
-                                            case '0':this.items[0].iconCls='icon-ahtung';
-                                            this.items[0].tooltip='Опись в ЕБД отсутствует.<br>Нажмите, чтобы запросить данные из базы';
-                                            break;
-                                            case '1':this.items[0].iconCls='icon-tick-3';
-                                            this.items[0].tooltip='Опись в ЕБД имеется.<br>Возможно не полная!!!';
-                                            break;
-                                            case '2':this.items[0].iconCls='icon-ahtung-red';
-                                            this.items[0].tooltip='ППЦ!!!';
-                                            break;
-                                        }
-                                    },
-                                    width: 55,
-                                    align: 'center',
-                                    dataIndex: 'opis',
-                                    text: 'Опись',
-                                    items: [
-                                        {
-                                            handler: function(view, rowIndex, colIndex, item, e, record, row) {
-                                                Ext.Ajax.request({
-                                                    url: 'data/ScanDocs/get-Opis.php',
-                                                    params: {
-                                                        id: record.data.id,
-                                                        name: record.data.name,
-                                                        confirm: 1
-                                                    },
-                                                    success: function(response){
-                                                        Ext.getStore('ScanDocs.MainData').reload();
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'actioncolumn',
-                                    renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
-                                        switch(value){
-                                            case '0':
-                                            if(record.data.opis > 0){
-                                                this.items[0].iconCls='icon-ahtung-red';
-                                                this.items[0].tooltip='Требуется обработка в ретроконверсии';
-                                            }else{
-                                                this.items[0].iconCls='';
-                                                this.items[0].tooltip='Сначала внесите опись в ЕГРП';
-                                            }
-                                            break;
-                                            case '1':this.items[0].iconCls='icon-ahtung';
-                                            this.items[0].tooltip='Выгружена для ретроконверсии';
-                                            break;
-                                            case '2':this.items[0].iconCls='icon-tick-3';
-                                            this.items[0].tooltip='Обработана в ретроконверсии';
-                                            break;
-                                        }
-                                    },
-                                    width: 76,
-                                    align: 'center',
-                                    dataIndex: 'retro',
-                                    text: 'В Платформе',
-                                    items: [
-                                        {
-                                            handler: function(view, rowIndex, colIndex, item, e, record, row) {
-                                                switch(record.data.retro){
-                                                    case '0':
-                                                    if(record.data.opis>0){
-                                                        var t='Данная процедура является одноразовой (отмена невозможна)!\n<br>Данное дело будет выгружено в отдельную папку для ретроконверсии.<br>Папка будет доступна на сервере облака.<br><br>';
-                                                        t=t+'Если у вас имеется данное ДПД на локальном диске,<br> вы можете здесь поставить только отметку о его обработке.<br><br>';
-                                                        t=t+'[Да] - Загрузка из облака<br>';
-                                                        t=t+'[Нет] - Работа с локальной копией. Отметить работу с ДПД<br>';
-                                                        t=t+'[Отмена] - Она и есть отмена...<br>';
-
-                                                        Ext.Msg.show({
-                                                            title:'Внимание',
-                                                            message:t,
-                                                            buttons:Ext.Msg.YESNOCANCEL,
-                                                            icon:Ext.Msg.WARNING,
-                                                            fn:function(btn){
-                                                                console.log(btn);
-                                                                if(btn==='yes'){
-                                                                    view.mask('Копирую файлы. Ждите...');
-                                                                    Ext.Ajax.request({
-                                                                        url:'data/ScanDocs/retro-start.php',
-                                                                        params:record.data,
-                                                                        async:false,
-                                                                        success:function(res,opt){
-                                                                            view.unmask();
-                                                                            Ext.getStore('ScanDocs.MainData').reload();
-                                                                            var r=Ext.JSON.decode(res.responseText,true),u=r.file,f=r.folder,t,s;
-                                                                            t='ДПД <u>выгружено </u> на сервер во временную папку "'+f+'"!<br>';
-                                                                            t=t+'Чтобы попасть в нее сохраните <a href="'+u+'" target="_blank">ЭТОТ ФАЙЛ</a> и запустите его.<br>';
-                                                                            t=t+'<u>ПО ЗАВЕРШЕНИИ ОБРАБОТКИ ОБЯЗАТЕЛЬНО <b>нажмите на значок <img src="/resources/images/silk_icons/icons/error.png" /></b>, чтобы отметить данное дело обработанным!</u><br>';
-                                                                            t=t+'Таким образом можно выгрузить сразу несколько дел. Все они попадут в одну папку типа "'+f+'".';
-                                                                            Ext.Msg.show({
-                                                                                title:'Внимание!',
-                                                                                message: t,
-                                                                                buttons: Ext.Msg.OK,
-                                                                            icon: Ext.Msg.WARNING});
-                                                                        },
-                                                                        failure:function(res,opts){
-                                                                            view.unmask();
-                                                                            Ext.getStore('ScanDocs.MainData').reload();
-                                                                        }
-                                                                    });}else if(btn==='no'){
-                                                                        var st=Ext.getStore('ScanDocs.MainData');
-                                                                        Ext.Ajax.request({
-                                                                            url:'data/ScanDocs/retro-point.php',
-                                                                            params:record.data,
-                                                                            success:function(r,o){st.reload();},
-                                                                            failure:function(r){Ext.Msg.alert('',r.result.msg);}
-                                                                        });
-                                                                    }}});}
-                                                                    break;
-                                                                    case '1':
-                                                                    var t='Данным действием удаляется дело из временной папки.<br>';
-                                                                    t=t+'Дальнейшие операции с данным делом будут невозможны.<br>';
-                                                                    t=t+'Завершить работу с делом "'+record.data.name+'"?';
-                                                                    Ext.Msg.show({
-                                                                        title:'Внимание',
-                                                                        message: t,
-                                                                        buttons: Ext.Msg.YESNO,
-                                                                        icon: Ext.Msg.QUESTION,
-                                                                        fn: function(btn) {
-                                                                            if (btn === 'yes') {
-                                                                                view.mask('Подождите...');
-                                                                                Ext.Ajax.request({
-                                                                                    url: 'data/ScanDocs/retro-end.php',
-                                                                                    params: record.data,
-                                                                                    success: function(r){Ext.getStore('ScanDocs.MainData').reload();}
-                                                                                });
-                                                                                view.unmask();
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                    break;
-                                                                    case '2':
-                                                                    Ext.Msg.show({
-                                                                        title:'Внимание!',
-                                                                        message:'Данное дело уже находится в Платформе.<br>Если требуются дополнительные действия, то обратитесь в отдел ИТ.',
-                                                                        buttons: Ext.Msg.OK,
-                                                                    icon: Ext.Msg.WARNING});
-                                                                    break;
-                                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'actioncolumn',
-                                    width: 59,
-                                    align: 'center',
-                                    text: 'Список',
-                                    iconCls: 'icon-document',
-                                    items: [
-                                        {
-                                            handler: function(view, rowIndex, colIndex, item, e, record, row) {
-                                                var ed = Ext.create('Portal.view.ScanDocs.Files').show();
-                                                ed.setTitle(record.data.name);
-                                                ed.getViewModel().getStore('storeFiles').load({params:{dir:record.data.name}});
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    width: 83,
-                                    dataIndex: 'cdate',
-                                    text: 'Загружено'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    width: 140,
-                                    dataIndex: 'name',
-                                    text: 'Кадастровый'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    hidden: true,
-                                    width: 52,
-                                    align: 'right',
-                                    dataIndex: 'cnt_files',
-                                    text: 'Документов'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    hidden: true,
-                                    width: 74,
-                                    align: 'right',
-                                    dataIndex: 'cnt_size',
-                                    text: 'Объём, Мб'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    flex: 1,
-                                    dataIndex: 'cad_name',
-                                    text: 'Территория'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    flex: 2,
-                                    dataIndex: 'n2',
-                                    text: 'Территориальный отдел',
-                                    filter: {
-                                        type: 'list'
-                                    }
-                                }
-                            ],
-                            dockedItems: [
-                                {
-                                    xtype: 'pagingtoolbar',
-                                    dock: 'bottom',
-                                    displayInfo: true,
-                                    store: 'ScanDocs.MainData',
-                                    listeners: {
-                                        change: {
-                                            fn: 'onPTbarChange',
-                                            scope: 'controller'
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'toolbar',
-                                    dock: 'top',
-                                    items: [
-                                        {
-                                            xtype: 'textfield',
-                                            flex: 1,
-                                            reference: 'seek',
-                                            blankText: 'Поиск по номеру дела',
-                                            emptyText: 'Поиск по номеру дела',
-                                            listeners: {
-                                                specialkey: {
-                                                    fn: 'onTextfieldSpecialkey',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'button',
-                                            iconCls: 'icon-seek',
-                                            text: 'Поиск',
-                                            listeners: {
-                                                click: {
-                                                    fn: 'onButtonClick',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'toolbar',
-                                    dock: 'top',
-                                    items: [
-                                        {
-                                            xtype: 'combobox',
-                                            reference: 'FilterOpis',
-                                            editable: false,
-                                            emptyText: 'Фильтр по Описи',
-                                            displayField: 'name',
-                                            valueField: 'id',
-                                            bind: {
-                                                store: '{dOpis}'
-                                            },
-                                            listeners: {
-                                                change: {
-                                                    fn: 'onFilterOpisChange',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'combobox',
-                                            reference: 'FilterRetro',
-                                            emptyText: 'Фильтр по ВПлатформе',
-                                            displayField: 'name',
-                                            valueField: 'id',
-                                            bind: {
-                                                store: '{dRetro}'
-                                            },
-                                            listeners: {
-                                                change: {
-                                                    fn: 'onFilterRetroChange',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'button',
-                                            iconCls: 'icon-add',
-                                            text: 'Добавить ДПД',
-                                            listeners: {
-                                                click: {
-                                                    fn: 'onAddDPDClick',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'button',
-                                            reference: 'btnRename',
-                                            disabled: true,
-                                            iconCls: 'icon-edit',
-                                            text: 'Переименовать ДПД',
-                                            listeners: {
-                                                click: {
-                                                    fn: 'onEditDPDClick',
-                                                    scope: 'controller'
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            plugins: [
-                                {
-                                    ptype: 'gridfilters'
-                                },
-                                {
-                                    ptype: 'gridfilters'
-                                }
-                            ],
-                            listeners: {
-                                selectionchange: {
-                                    fn: 'onMainSelectionChange',
-                                    scope: 'controller'
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    layout: 'fit',
-                    title: 'Список кадастровых районов',
-                    items: [
+                          xtype: 'datefield',
+                          fieldLabel: 'Конец',
+                          labelWidth: 50,
+                          name: 'dateEnd',
+                          format: 'Y-m-d',
+                          submitFormat: 'Y-m-d'
+                        },
                         {
-                            xtype: 'gridpanel',
-                            header: false,
-                            title: 'Список',
-                            store: 'ScanDocs.District',
-                            columns: [
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'cadnum',
-                                    text: 'Кад.Номер'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'district_id',
-                                    text: 'Индекс'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    flex: 2,
-                                    dataIndex: 'name',
-                                    text: 'Территория'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    flex: 1,
-                                    dataIndex: 'n2',
-                                    groupable: true,
-                                    text: 'Территориальный Отдел'
-                                }
-                            ]
+                          xtype: 'combobox',
+                          anchor: '100%',
+                          hidden: true,
+                          fieldLabel: 'За какой год',
+                          name: 'cyear',
+                          displayField: 'cyear',
+                          valueField: 'cyear',
+                          bind: {
+                            store: '{cyear}'
+                          }
                         }
-                    ],
-                    listeners: {
-                        activate: 'onPanelActivate'
-                    }
-                },
-                {
-                    xtype: 'panel',
-                    reference: 'TabError',
-                    layout: 'fit',
-                    iconCls: 'icon-ahtung-red',
-                    title: 'Ошибки',
-                    items: [
-                        {
-                            xtype: 'tabpanel',
-                            activeTab: 0,
-                            items: [
-                                {
-                                    xtype: 'panel',
-                                    layout: 'fit',
-                                    title: 'Ошибки в кадастровом номере',
-                                    items: [
-                                        {
-                                            xtype: 'gridpanel',
-                                            bind: {
-                                                store: '{Error1}'
-                                            },
-                                            columns: [
-                                                {
-                                                    xtype: 'datecolumn',
-                                                    dataIndex: 'cdate',
-                                                    text: 'Загружено',
-                                                    format: 'Y-m-d'
-                                                },
-                                                {
-                                                    xtype: 'gridcolumn',
-                                                    width: 146,
-                                                    dataIndex: 'name',
-                                                    text: 'Кадастровый'
-                                                },
-                                                {
-                                                    xtype: 'gridcolumn',
-                                                    dataIndex: 'cyear',
-                                                    text: 'Папка года'
-                                                },
-                                                {
-                                                    xtype: 'gridcolumn',
-                                                    flex: 1,
-                                                    dataIndex: 'path',
-                                                    text: 'Путь'
-                                                }
-                                            ],
-                                            dockedItems: [
-                                                {
-                                                    xtype: 'pagingtoolbar',
-                                                    dock: 'bottom',
-                                                    width: 360,
-                                                    displayInfo: true,
-                                                    bind: {
-                                                        store: '{Error1}'
-                                                    }
-                                                },
-                                                {
-                                                    xtype: 'toolbar',
-                                                    dock: 'top',
-                                                    items: [
-                                                        {
-                                                            xtype: 'button',
-                                                            iconCls: 'icon-refresh',
-                                                            text: 'Загрузить/Обновить',
-                                                            listeners: {
-                                                                click: 'onButtonClick1'
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'panel',
-                                    layout: 'fit',
-                                    title: 'Tab 2',
-                                    dockedItems: [
-                                        {
-                                            xtype: 'toolbar',
-                                            dock: 'top'
-                                        }
-                                    ],
-                                    items: [
-                                        {
-                                            xtype: 'gridpanel',
-                                            title: 'My Grid Panel',
-                                            columns: [
-                                                {
-                                                    xtype: 'gridcolumn',
-                                                    dataIndex: 'string',
-                                                    text: 'String'
-                                                },
-                                                {
-                                                    xtype: 'numbercolumn',
-                                                    dataIndex: 'number',
-                                                    text: 'Number'
-                                                },
-                                                {
-                                                    xtype: 'datecolumn',
-                                                    dataIndex: 'date',
-                                                    text: 'Date'
-                                                },
-                                                {
-                                                    xtype: 'booleancolumn',
-                                                    dataIndex: 'bool',
-                                                    text: 'Boolean'
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    xtype: 'panel',
-                                    title: 'Tab 3'
-                                }
-                            ],
-                            tabBar: {
-                                xtype: 'tabbar'
-                            }
-                        }
-                    ]
-                },
-                {
-                    xtype: 'gridpanel',
-                    title: 'По отделам общая',
-                    bind: {
-                        store: '{statCommon}'
+                      ]
                     },
-                    tabConfig: {
-                        xtype: 'tab',
-                        dock: 'left',
-                        iconCls: 'icon-stat1'
+                    {
+                      xtype: 'fieldset',
+                      title: 'Территориальный Отдел',
+                      items: [
+                        {
+                          xtype: 'combobox',
+                          anchor: '100%',
+                          name: 'Otdel',
+                          displayField: 'name',
+                          store: 'ScanDocs.Otdel',
+                          valueField: 'id'
+                        }
+                      ]
                     },
-                    columns: [
+                    {
+                      xtype: 'fieldcontainer',
+                      height: 36,
+                      width: 283,
+                      layout: 'fit',
+                      items: [
                         {
-                            xtype: 'rownumberer'
+                          xtype: 'button',
+                          id: 'Calc',
+                          itemId: 'Calc',
+                          iconCls: 'icon-calc',
+                          text: 'Посчитать',
+                          listeners: {
+                            click: {
+                              fn: 'onCalcClick',
+                              scope: 'controller'
+                            }
+                          }
                         },
                         {
-                            xtype: 'gridcolumn',
-                            width: 200,
-                            dataIndex: 'name',
-                            text: 'Отдел'
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            defaults: {
-                                align: 'end',
-                                format: '0'
-                            },
-                            defaultWidth: 60,
-                            align: 'end',
-                            text: 'Количество ДПД переведенных в эл. форму по состоянию:',
-                            columns: [
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm01',
-                                    text: 'Январь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm02',
-                                    text: 'Февраль'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm03',
-                                    text: 'Март'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm04',
-                                    text: 'Апрель'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm05',
-                                    text: 'Май'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm06',
-                                    text: 'Июнь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm07',
-                                    text: 'Июль'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm08',
-                                    text: 'Август'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm09',
-                                    text: 'Сентябрь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm10',
-                                    text: 'Октябрь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm11',
-                                    text: 'Ноябрь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    dataIndex: 'm12',
-                                    text: 'Декабрь'
-                                },
-                                {
-                                    xtype: 'gridcolumn',
-                                    renderData: {
-                                        uiCls: 'f-bold'
-                                    },
-                                    dataIndex: 'summa',
-                                    text: 'Всего'
-                                }
-                            ]
+                          xtype: 'button',
+                          id: 'Reset',
+                          itemId: 'Reset',
+                          text: 'Сброс',
+                          listeners: {
+                            click: {
+                              fn: 'onResetClick',
+                              scope: 'controller'
+                            }
+                          }
                         }
-                    ],
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            dock: 'top',
-                            items: [
-                                {
-                                    xtype: 'combobox',
-                                    reference: 'year',
-                                    editable: false,
-                                    emptyText: 'За какой год',
-                                    displayField: 'name',
-                                    valueField: 'name',
-                                    bind: {
-                                        store: '{vYears}'
-                                    },
-                                    listeners: {
-                                        change: {
-                                            fn: 'onYear2Change',
-                                            scope: 'controller'
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'button',
-                                    reference: 'btnCalc2',
-                                    disabled: true,
-                                    iconCls: 'icon-calculator',
-                                    text: 'Посчитать',
-                                    listeners: {
-                                        click: {
-                                            fn: 'onCalc2Click',
-                                            scope: 'controller'
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'button',
-                                    reference: 'btnCalc3',
-                                    disabled: true,
-                                    iconCls: 'icon-calculator',
-                                    text: 'Посчитать подробно',
-                                    listeners: {
-                                        click: {
-                                            fn: 'onCalc3Click',
-                                            scope: 'controller'
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'button',
-                                    iconCls: 'app-mime-excel',
-                                    text: 'MyButton',
-                                    listeners: {
-                                        click: {
-                                            fn: 'onExcel1Click',
-                                            scope: 'controller'
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    listeners: {
-                        activate: {
-                            fn: 'onTabCommonActivate',
-                            scope: 'controller'
-                        }
+                      ]
                     }
+                  ]
+                },
+                {
+                  xtype: 'form',
+                  reference: 'detailPanel',
+                  height: 156,
+                  itemId: 'detailPanel',
+                  padding: 5,
+                  header: false,
+                  url: 'data/ScanDocs/stat1.json.php',
+                  items: [
+                    {
+                      xtype: 'label',
+                      html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/</a><br>'
+                    },
+                    {
+                      xtype: 'label',
+                      html: '<a href="http://sp.rosreestr.ru:8082/uit/Lists/2017/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/Lists/2017/</a>'
+                    },
+                    {
+                      xtype: 'fieldset',
+                      layout: 'auto',
+                      title: '---',
+                      items: [
+                        {
+                          xtype: 'displayfield',
+                          reference: 'count_dpd',
+                          fieldLabel: 'Количество дел',
+                          name: 'count_dpd',
+                          value: 'считаю...'
+                        },
+                        {
+                          xtype: 'displayfield',
+                          reference: 'count_opis',
+                          fieldLabel: 'С описями',
+                          name: 'count_opis',
+                          value: 'считаю...'
+                        },
+                        {
+                          xtype: 'displayfield',
+                          reference: 'count_retro',
+                          fieldLabel: 'В Платформе',
+                          name: 'count_retro',
+                          value: 'считаю...'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  xtype: 'panel',
+                  flex: 1,
+                  hidden: true,
+                  html: '<p align="center"> <font color="green"> Информация!<br> В подсчете ДПД используется дата создания каталога с кадастровым номерм дела.<br> Поэтому загруженные Тома в дело, загруженное ранее в статистику <u>не попадают</u>. </font> </p><p align="center"> <font color="blue">Дважды кликнув левой кнопкой мышки на любом деле, откроется список загруженных файлов</font></p>',
+                  scrollable: true,
+                  header: false
                 }
-            ]
-        }
-    ],
-    listeners: {
-        afterrender: {
-            fn: 'onPanelAfterRender',
-            scope: 'controller'
-        }
-    },
+              ]
+            },
+            {
+              xtype: 'gridpanel',
+              region: 'center',
+              split: false,
+              reference: 'tblMain',
+              title: 'Табличные данные',
+              store: 'ScanDocs.MainData',
+              columns: [
+                {
+                  xtype: 'actioncolumn',
+                  renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+                    switch(value){
+                      case '0':this.items[0].iconCls='icon-ahtung';
+                      this.items[0].tooltip='Опись в ЕБД отсутствует.<br>Нажмите, чтобы запросить данные из базы';
+                      break;
+                      case '1':this.items[0].iconCls='icon-tick-3';
+                      this.items[0].tooltip='Опись в ЕБД имеется.<br>Возможно не полная!!!';
+                      break;
+                      case '2':this.items[0].iconCls='icon-ahtung-red';
+                      this.items[0].tooltip='ППЦ!!!';
+                      break;
+                    }
+                  },
+                  width: 55,
+                  align: 'center',
+                  dataIndex: 'opis',
+                  text: 'Опись',
+                  items: [
+                    {
+                      handler: function(view, rowIndex, colIndex, item, e, record, row) {
+                        Ext.Ajax.request({
+                          url: 'data/ScanDocs/get-Opis.php',
+                          params: {
+                            id: record.data.id,
+                            name: record.data.name,
+                            confirm: 1
+                          },
+                          success: function(response){
+                            Ext.getStore('ScanDocs.MainData').reload();
+                          }
+                        });
+                      }
+                    }
+                  ]
+                },
+                {
+                  xtype: 'actioncolumn',
+                  renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+                    switch(value){
+                      case '0':
+                      if(record.data.opis > 0){
+                        this.items[0].iconCls='icon-ahtung-red';
+                        this.items[0].tooltip='Требуется обработка в ретроконверсии';
+                      }else{
+                        this.items[0].iconCls='';
+                        this.items[0].tooltip='Сначала внесите опись в ЕГРП';
+                      }
+                      break;
+                      case '1':this.items[0].iconCls='icon-ahtung';
+                      this.items[0].tooltip='Выгружена для ретроконверсии';
+                      break;
+                      case '2':this.items[0].iconCls='icon-tick-3';
+                      this.items[0].tooltip='Обработана в ретроконверсии';
+                      break;
+                    }
+                  },
+                  width: 76,
+                  align: 'center',
+                  dataIndex: 'retro',
+                  text: 'В Платформе',
+                  items: [
+                    {
+                      handler: function(view, rowIndex, colIndex, item, e, record, row) {
+                        switch(record.data.retro){
+                          case '0':
+                          if(record.data.opis>0){
+                            var t='Данная процедура является одноразовой (отмена невозможна)!\n<br>Данное дело будет выгружено в отдельную папку для ретроконверсии.<br>Папка будет доступна на сервере облака.<br><br>';
+                            t=t+'Если у вас имеется данное ДПД на локальном диске,<br> вы можете здесь поставить только отметку о его обработке.<br><br>';
+                            t=t+'[Да] - Загрузка из облака<br>';
+                            t=t+'[Нет] - Работа с локальной копией. Отметить работу с ДПД<br>';
+                            t=t+'[Отмена] - Она и есть отмена...<br>';
 
-    onPanelActivate: function(component, eOpts) {
-        Ext.getStore('ScanDocs.District').load();
-    },
-
-    onButtonClick1: function(button, e, eOpts) {
-        this.getViewModel().getStore('Error1').reload();
+                            Ext.Msg.show({
+                              title:'Внимание',
+                              message:t,
+                              buttons:Ext.Msg.YESNOCANCEL,
+                              icon:Ext.Msg.WARNING,
+                              fn:function(btn){
+                                console.log(btn);
+                                if(btn==='yes'){
+                                  view.mask('Копирую файлы. Ждите...');
+                                  Ext.Ajax.request({
+                                    url:'data/ScanDocs/retro-start.php',
+                                    params:record.data,
+                                    async:false,
+                                    success:function(res,opt){
+                                      view.unmask();
+                                      Ext.getStore('ScanDocs.MainData').reload();
+                                      var r=Ext.JSON.decode(res.responseText,true),u=r.file,f=r.folder,t,s;
+                                      t='ДПД <u>выгружено </u> на сервер во временную папку "'+f+'"!<br>';
+                                      t=t+'Чтобы попасть в нее сохраните <a href="'+u+'" target="_blank">ЭТОТ ФАЙЛ</a> и запустите его.<br>';
+                                      t=t+'<u>ПО ЗАВЕРШЕНИИ ОБРАБОТКИ ОБЯЗАТЕЛЬНО <b>нажмите на значок <img src="/resources/images/silk_icons/icons/error.png" /></b>, чтобы отметить данное дело обработанным!</u><br>';
+                                      t=t+'Таким образом можно выгрузить сразу несколько дел. Все они попадут в одну папку типа "'+f+'".';
+                                      Ext.Msg.show({
+                                        title:'Внимание!',
+                                        message: t,
+                                        buttons: Ext.Msg.OK,
+                                      icon: Ext.Msg.WARNING});
+                                    },
+                                    failure:function(res,opts){
+                                      view.unmask();
+                                      Ext.getStore('ScanDocs.MainData').reload();
+                                    }
+                                  });}else if(btn==='no'){
+                                    var st=Ext.getStore('ScanDocs.MainData');
+                                    Ext.Ajax.request({
+                                      url:'data/ScanDocs/retro-point.php',
+                                      params:record.data,
+                                      success:function(r,o){st.reload();},
+                                      failure:function(r){Ext.Msg.alert('',r.result.msg);}
+                                    });
+                                  }}});}
+                                  break;
+                                  case '1':
+                                  var t='Данным действием удаляется дело из временной папки.<br>';
+                                  t=t+'Дальнейшие операции с данным делом будут невозможны.<br>';
+                                  t=t+'Завершить работу с делом "'+record.data.name+'"?';
+                                  Ext.Msg.show({
+                                    title:'Внимание',
+                                    message: t,
+                                    buttons: Ext.Msg.YESNO,
+                                    icon: Ext.Msg.QUESTION,
+                                    fn: function(btn) {
+                                      if (btn === 'yes') {
+                                        view.mask('Подождите...');
+                                        Ext.Ajax.request({
+                                          url: 'data/ScanDocs/retro-end.php',
+                                          params: record.data,
+                                          success: function(r){Ext.getStore('ScanDocs.MainData').reload();}
+                                        });
+                                        view.unmask();
+                                      }
+                                    }
+                                  });
+                                  break;
+                                  case '2':
+                                  Ext.Msg.show({
+                                    title:'Внимание!',
+                                    message:'Данное дело уже находится в Платформе.<br>Если требуются дополнительные действия, то обратитесь в отдел ИТ.',
+                                    buttons: Ext.Msg.OK,
+                                  icon: Ext.Msg.WARNING});
+                                  break;
+                                }
+                      }
+                    }
+                  ]
+                },
+                {
+                  xtype: 'actioncolumn',
+                  width: 59,
+                  align: 'center',
+                  text: 'Список',
+                  iconCls: 'icon-document',
+                  items: [
+                    {
+                      handler: function(view, rowIndex, colIndex, item, e, record, row) {
+                        var ed = Ext.create('Portal.view.ScanDocs.Files').show();
+                        ed.setTitle(record.data.name);
+                        ed.setConfig({itemId:record.data.id});
+                        ed.getViewModel().getStore('storeFiles').load({params:{dir:record.data.name}});
+                      }
+                    }
+                  ]
+                },
+                {
+                  xtype: 'gridcolumn',
+                  width: 83,
+                  dataIndex: 'cdate',
+                  text: 'Загружено'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  width: 140,
+                  dataIndex: 'name',
+                  text: 'Кадастровый'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  hidden: true,
+                  width: 52,
+                  align: 'right',
+                  dataIndex: 'cnt_files',
+                  text: 'Документов'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  hidden: true,
+                  width: 74,
+                  align: 'right',
+                  dataIndex: 'cnt_size',
+                  text: 'Объём, Мб'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  flex: 1,
+                  dataIndex: 'cad_name',
+                  text: 'Территория'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  flex: 2,
+                  dataIndex: 'n2',
+                  text: 'Территориальный отдел',
+                  filter: {
+                    type: 'list'
+                  }
+                }
+              ],
+              dockedItems: [
+                {
+                  xtype: 'pagingtoolbar',
+                  dock: 'bottom',
+                  displayInfo: true,
+                  store: 'ScanDocs.MainData',
+                  listeners: {
+                    change: {
+                      fn: 'onPTbarChange',
+                      scope: 'controller'
+                    }
+                  }
+                },
+                {
+                  xtype: 'toolbar',
+                  dock: 'top',
+                  items: [
+                    {
+                      xtype: 'textfield',
+                      flex: 1,
+                      reference: 'seek',
+                      blankText: 'Поиск по номеру дела',
+                      emptyText: 'Поиск по номеру дела',
+                      listeners: {
+                        specialkey: {
+                          fn: 'onTextfieldSpecialkey',
+                          scope: 'controller'
+                        }
+                      }
+                    },
+                    {
+                      xtype: 'button',
+                      iconCls: 'icon-seek',
+                      text: 'Поиск',
+                      listeners: {
+                        click: {
+                          fn: 'onButtonClick',
+                          scope: 'controller'
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  xtype: 'toolbar',
+                  dock: 'top',
+                  items: [
+                    {
+                      xtype: 'combobox',
+                      reference: 'FilterOpis',
+                      editable: false,
+                      emptyText: 'Фильтр по Описи',
+                      displayField: 'name',
+                      valueField: 'id',
+                      bind: {
+                        store: '{dOpis}'
+                      },
+                      listeners: {
+                        change: {
+                          fn: 'onFilterOpisChange',
+                          scope: 'controller'
+                        }
+                      }
+                    },
+                    {
+                      xtype: 'combobox',
+                      reference: 'FilterRetro',
+                      emptyText: 'Фильтр по ВПлатформе',
+                      displayField: 'name',
+                      valueField: 'id',
+                      bind: {
+                        store: '{dRetro}'
+                      },
+                      listeners: {
+                        change: {
+                          fn: 'onFilterRetroChange',
+                          scope: 'controller'
+                        }
+                      }
+                    },
+                    {
+                      xtype: 'button',
+                      iconCls: 'icon-add',
+                      text: 'Добавить ДПД',
+                      listeners: {
+                        click: {
+                          fn: 'onAddDPDClick',
+                          scope: 'controller'
+                        }
+                      }
+                    },
+                    {
+                      xtype: 'button',
+                      reference: 'btnRename',
+                      disabled: true,
+                      iconCls: 'icon-edit',
+                      text: 'Переименовать ДПД',
+                      listeners: {
+                        click: {
+                          fn: 'onEditDPDClick',
+                          scope: 'controller'
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              plugins: [
+                {
+                  ptype: 'gridfilters'
+                },
+                {
+                  ptype: 'gridfilters'
+                }
+              ],
+              listeners: {
+                selectionchange: {
+                  fn: 'onMainSelectionChange',
+                  scope: 'controller'
+                }
+              }
+            }
+          ]
+        },
+        {
+          xtype: 'panel',
+          layout: 'fit',
+          title: 'Список кадастровых районов',
+          items: [
+            {
+              xtype: 'gridpanel',
+              header: false,
+              title: 'Список',
+              store: 'ScanDocs.District',
+              columns: [
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'cadnum',
+                  text: 'Кад.Номер'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'district_id',
+                  text: 'Индекс'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  flex: 2,
+                  dataIndex: 'name',
+                  text: 'Территория'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  flex: 1,
+                  dataIndex: 'n2',
+                  groupable: true,
+                  text: 'Территориальный Отдел'
+                }
+              ]
+            }
+          ],
+          listeners: {
+            activate: 'onPanelActivate'
+          }
+        },
+        {
+          xtype: 'panel',
+          reference: 'TabError',
+          layout: 'fit',
+          iconCls: 'icon-ahtung-red',
+          title: 'Ошибки',
+          items: [
+            {
+              xtype: 'tabpanel',
+              activeTab: 0,
+              items: [
+                {
+                  xtype: 'panel',
+                  layout: 'fit',
+                  title: 'Ошибки в кадастровом номере',
+                  items: [
+                    {
+                      xtype: 'gridpanel',
+                      bind: {
+                        store: '{Error1}'
+                      },
+                      columns: [
+                        {
+                          xtype: 'datecolumn',
+                          dataIndex: 'cdate',
+                          text: 'Загружено',
+                          format: 'Y-m-d'
+                        },
+                        {
+                          xtype: 'gridcolumn',
+                          width: 146,
+                          dataIndex: 'name',
+                          text: 'Кадастровый'
+                        },
+                        {
+                          xtype: 'gridcolumn',
+                          dataIndex: 'cyear',
+                          text: 'Папка года'
+                        },
+                        {
+                          xtype: 'gridcolumn',
+                          flex: 1,
+                          dataIndex: 'path',
+                          text: 'Путь'
+                        }
+                      ],
+                      dockedItems: [
+                        {
+                          xtype: 'pagingtoolbar',
+                          dock: 'bottom',
+                          width: 360,
+                          displayInfo: true,
+                          bind: {
+                            store: '{Error1}'
+                          }
+                        },
+                        {
+                          xtype: 'toolbar',
+                          dock: 'top',
+                          items: [
+                            {
+                              xtype: 'button',
+                              iconCls: 'icon-refresh',
+                              text: 'Загрузить/Обновить',
+                              listeners: {
+                                click: 'onButtonClick1'
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  xtype: 'panel',
+                  layout: 'fit',
+                  title: 'Tab 2',
+                  dockedItems: [
+                    {
+                      xtype: 'toolbar',
+                      dock: 'top'
+                    }
+                  ],
+                  items: [
+                    {
+                      xtype: 'gridpanel',
+                      title: 'My Grid Panel',
+                      columns: [
+                        {
+                          xtype: 'gridcolumn',
+                          dataIndex: 'string',
+                          text: 'String'
+                        },
+                        {
+                          xtype: 'numbercolumn',
+                          dataIndex: 'number',
+                          text: 'Number'
+                        },
+                        {
+                          xtype: 'datecolumn',
+                          dataIndex: 'date',
+                          text: 'Date'
+                        },
+                        {
+                          xtype: 'booleancolumn',
+                          dataIndex: 'bool',
+                          text: 'Boolean'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  xtype: 'panel',
+                  title: 'Tab 3'
+                }
+              ],
+              tabBar: {
+                xtype: 'tabbar'
+              }
+            }
+          ]
+        },
+        {
+          xtype: 'gridpanel',
+          title: 'По отделам общая',
+          bind: {
+            store: '{statCommon}'
+          },
+          tabConfig: {
+            xtype: 'tab',
+            dock: 'left',
+            iconCls: 'icon-stat1'
+          },
+          columns: [
+            {
+              xtype: 'rownumberer'
+            },
+            {
+              xtype: 'gridcolumn',
+              width: 200,
+              dataIndex: 'name',
+              text: 'Отдел'
+            },
+            {
+              xtype: 'gridcolumn',
+              defaults: {
+                align: 'end',
+                format: '0'
+              },
+              defaultWidth: 60,
+              align: 'end',
+              text: 'Количество ДПД переведенных в эл. форму по состоянию:',
+              columns: [
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm01',
+                  text: 'Январь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm02',
+                  text: 'Февраль'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm03',
+                  text: 'Март'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm04',
+                  text: 'Апрель'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm05',
+                  text: 'Май'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm06',
+                  text: 'Июнь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm07',
+                  text: 'Июль'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm08',
+                  text: 'Август'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm09',
+                  text: 'Сентябрь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm10',
+                  text: 'Октябрь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm11',
+                  text: 'Ноябрь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'm12',
+                  text: 'Декабрь'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  renderData: {
+                    uiCls: 'f-bold'
+                  },
+                  dataIndex: 'summa',
+                  text: 'Всего'
+                }
+              ]
+            }
+          ],
+          dockedItems: [
+            {
+              xtype: 'toolbar',
+              dock: 'top',
+              items: [
+                {
+                  xtype: 'combobox',
+                  reference: 'year',
+                  editable: false,
+                  emptyText: 'За какой год',
+                  displayField: 'name',
+                  valueField: 'name',
+                  bind: {
+                    store: '{vYears}'
+                  },
+                  listeners: {
+                    change: {
+                      fn: 'onYear2Change',
+                      scope: 'controller'
+                    }
+                  }
+                },
+                {
+                  xtype: 'button',
+                  reference: 'btnCalc2',
+                  disabled: true,
+                  iconCls: 'icon-calculator',
+                  text: 'Посчитать',
+                  listeners: {
+                    click: {
+                      fn: 'onCalc2Click',
+                      scope: 'controller'
+                    }
+                  }
+                },
+                {
+                  xtype: 'button',
+                  reference: 'btnCalc3',
+                  disabled: true,
+                  iconCls: 'icon-calculator',
+                  text: 'Посчитать подробно',
+                  listeners: {
+                    click: {
+                      fn: 'onCalc3Click',
+                      scope: 'controller'
+                    }
+                  }
+                },
+                {
+                  xtype: 'button',
+                  iconCls: 'app-mime-excel',
+                  text: 'MyButton',
+                  listeners: {
+                    click: {
+                      fn: 'onExcel1Click',
+                      scope: 'controller'
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          listeners: {
+            activate: {
+              fn: 'onTabCommonActivate',
+              scope: 'controller'
+            }
+          }
+        }
+      ]
     }
+  ],
+  listeners: {
+    afterrender: {
+      fn: 'onPanelAfterRender',
+      scope: 'controller'
+    }
+  },
+
+  onPanelActivate: function(component, eOpts) {
+    Ext.getStore('ScanDocs.District').load();
+  },
+
+  onButtonClick1: function(button, e, eOpts) {
+    this.getViewModel().getStore('Error1').reload();
+  }
 
 });

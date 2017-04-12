@@ -14,7 +14,7 @@
  */
 
 Ext.define('Portal.view.ScanDocs.renameViewModel', {
-    extend: 'Ext.app.ViewModel',
-    alias: 'viewmodel.scandocs.rename'
+  extend: 'Ext.app.ViewModel',
+  alias: 'viewmodel.scandocs.rename'
 
 });

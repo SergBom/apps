@@ -14,30 +14,30 @@
  */
 
 Ext.define('Portal.store.ScanDocs.Otdel', {
-    extend: 'Ext.data.Store',
-    alias: 'store.Otdel',
+  extend: 'Ext.data.Store',
+  alias: 'store.Otdel',
 
-    requires: [
-        'Portal.model.ScanDocs.Otdel',
-        'Ext.data.proxy.Ajax',
-        'Ext.data.reader.Json'
-    ],
+  requires: [
+    'Portal.model.ScanDocs.Otdel',
+    'Ext.data.proxy.Ajax',
+    'Ext.data.reader.Json'
+  ],
 
-    constructor: function(cfg) {
-        var me = this;
-        cfg = cfg || {};
-        me.callParent([Ext.apply({
-            storeId: 'ScanDocs.Otdel',
-            autoLoad: false,
-            model: 'Portal.model.ScanDocs.Otdel',
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/otdels.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            }
-        }, cfg)]);
-    }
+  constructor: function(cfg) {
+    var me = this;
+    cfg = cfg || {};
+    me.callParent([Ext.apply({
+      storeId: 'ScanDocs.Otdel',
+      autoLoad: false,
+      model: 'Portal.model.ScanDocs.Otdel',
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/otdels.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      }
+    }, cfg)]);
+  }
 });

@@ -14,22 +14,22 @@
  */
 
 Ext.define('Portal.controller.ScanDocs.ScanDocs', {
-    extend: 'Ext.app.Controller',
+  extend: 'Ext.app.Controller',
 
-    models: [
-        'ScanDocs.MainData',
-        'ScanDocs.District',
-        'ScanDocs.Otdel'
-    ],
-    stores: [
-        'ScanDocs.MainData',
-        'ScanDocs.District',
-        'ScanDocs.Otdel'
-    ],
-    views: [
-        'ScanDocs.main',
-        'ScanDocs.Files',
-        'ScanDocs.dpd',
-        'ScanDocs.rename'
-    ]
+  models: [
+    'ScanDocs.MainData',
+    'ScanDocs.District',
+    'ScanDocs.Otdel'
+  ],
+  stores: [
+    'ScanDocs.MainData',
+    'ScanDocs.District',
+    'ScanDocs.Otdel'
+  ],
+  views: [
+    'ScanDocs.main',
+    'ScanDocs.Files',
+    'ScanDocs.dpd',
+    'ScanDocs.rename'
+  ]
 });

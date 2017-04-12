@@ -14,96 +14,96 @@
  */
 
 Ext.define('Portal.view.ScanDocs.rename', {
-    extend: 'Ext.window.Window',
-    alias: 'widget.scandocs.rename',
+  extend: 'Ext.window.Window',
+  alias: 'widget.scandocs.rename',
 
-    requires: [
-        'Portal.view.ScanDocs.renameViewModel',
-        'Portal.view.ScanDocs.renameViewController',
-        'Ext.form.Panel',
-        'Ext.toolbar.Toolbar',
-        'Ext.button.Button',
-        'Ext.form.field.Text',
-        'Ext.form.field.Hidden'
-    ],
+  requires: [
+    'Portal.view.ScanDocs.renameViewModel',
+    'Portal.view.ScanDocs.renameViewController',
+    'Ext.form.Panel',
+    'Ext.toolbar.Toolbar',
+    'Ext.button.Button',
+    'Ext.form.field.Text',
+    'Ext.form.field.Hidden'
+  ],
 
-    controller: 'scandocs.rename',
-    viewModel: {
-        type: 'scandocs.rename'
-    },
-    modal: true,
-    height: 159,
-    width: 400,
-    layout: 'fit',
-    iconCls: 'icon-edit',
-    title: 'Переименовать ДПД',
+  controller: 'scandocs.rename',
+  viewModel: {
+    type: 'scandocs.rename'
+  },
+  modal: true,
+  height: 159,
+  width: 400,
+  layout: 'fit',
+  iconCls: 'icon-edit',
+  title: 'Переименовать ДПД',
 
-    items: [
+  items: [
+    {
+      xtype: 'form',
+      reference: 'form',
+      border: false,
+      bodyPadding: 10,
+      dockedItems: [
         {
-            xtype: 'form',
-            reference: 'form',
-            border: false,
-            bodyPadding: 10,
-            dockedItems: [
+          xtype: 'toolbar',
+          dock: 'bottom',
+          items: [
+            {
+              xtype: 'container',
+              padding: 10,
+              items: [
                 {
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    items: [
-                        {
-                            xtype: 'container',
-                            padding: 10,
-                            items: [
-                                {
-                                    xtype: 'button',
-                                    formBind: true,
-                                    iconCls: 'dialog-save',
-                                    text: 'Переименовать',
-                                    listeners: {
-                                        click: 'onRenameClick'
-                                    }
-                                },
-                                {
-                                    xtype: 'button',
-                                    iconCls: 'dialog-cancel',
-                                    text: 'Отмена',
-                                    listeners: {
-                                        click: 'onCancelClick'
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+                  xtype: 'button',
+                  formBind: true,
+                  iconCls: 'dialog-save',
+                  text: 'Переименовать',
+                  listeners: {
+                    click: 'onRenameClick'
+                  }
+                },
+                {
+                  xtype: 'button',
+                  iconCls: 'dialog-cancel',
+                  text: 'Отмена',
+                  listeners: {
+                    click: 'onCancelClick'
+                  }
                 }
-            ],
-            items: [
-                {
-                    xtype: 'textfield',
-                    anchor: '100%',
-                    name: 'name',
-                    allowBlank: false,
-                    regex: /^\d\d \d\d \d\d\d\d\d\d\d \d+$/,
-                    regexText: 'Шаблон номера: 51 00 0000000 000'
-                },
-                {
-                    xtype: 'hiddenfield',
-                    anchor: '100%',
-                    fieldLabel: 'Label',
-                    name: 'path'
-                },
-                {
-                    xtype: 'hiddenfield',
-                    anchor: '100%',
-                    fieldLabel: 'Label',
-                    name: 'cyear'
-                },
-                {
-                    xtype: 'hiddenfield',
-                    anchor: '100%',
-                    fieldLabel: 'Label',
-                    name: 'id'
-                }
-            ]
+              ]
+            }
+          ]
         }
-    ]
+      ],
+      items: [
+        {
+          xtype: 'textfield',
+          anchor: '100%',
+          name: 'name',
+          allowBlank: false,
+          regex: /^\d\d \d\d \d\d\d\d\d\d\d \d+$/,
+          regexText: 'Шаблон номера: 51 00 0000000 000'
+        },
+        {
+          xtype: 'hiddenfield',
+          anchor: '100%',
+          fieldLabel: 'Label',
+          name: 'path'
+        },
+        {
+          xtype: 'hiddenfield',
+          anchor: '100%',
+          fieldLabel: 'Label',
+          name: 'cyear'
+        },
+        {
+          xtype: 'hiddenfield',
+          anchor: '100%',
+          fieldLabel: 'Label',
+          name: 'id'
+        }
+      ]
+    }
+  ]
 
 });

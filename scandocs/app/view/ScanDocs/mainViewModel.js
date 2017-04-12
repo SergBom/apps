@@ -14,167 +14,167 @@
  */
 
 Ext.define('Portal.view.ScanDocs.mainViewModel', {
-    extend: 'Ext.app.ViewModel',
-    alias: 'viewmodel.scandocsmain',
+  extend: 'Ext.app.ViewModel',
+  alias: 'viewmodel.scandocsmain',
 
-    requires: [
-        'Ext.data.Store',
-        'Ext.data.proxy.Ajax',
-        'Ext.data.reader.Json',
-        'Ext.data.field.Field'
-    ],
+  requires: [
+    'Ext.data.Store',
+    'Ext.data.proxy.Ajax',
+    'Ext.data.reader.Json',
+    'Ext.data.field.Field'
+  ],
 
-    stores: {
-        cyear: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/cyear.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'cyear'
-                }
-            ]
-        },
-        Error1: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/Error1.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'id'
-                },
-                {
-                    name: 'cdate'
-                },
-                {
-                    name: 'name'
-                },
-                {
-                    name: 'path'
-                },
-                {
-                    name: 'cyear'
-                },
-                {
-                    name: 'par_id'
-                }
-            ]
-        },
-        dOpis: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/Opis-status.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'id'
-                },
-                {
-                    name: 'name'
-                }
-            ]
-        },
-        dRetro: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/Retro-status.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'id'
-                },
-                {
-                    name: 'name'
-                }
-            ]
-        },
-        vYears: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/getYears.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'name'
-                }
-            ]
-        },
-        statCommon: {
-            proxy: {
-                type: 'ajax',
-                url: 'data/ScanDocs/statCommon.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: [
-                {
-                    name: 'name'
-                },
-                {
-                    name: 'm01'
-                },
-                {
-                    name: 'm02'
-                },
-                {
-                    name: 'm03'
-                },
-                {
-                    name: 'm04'
-                },
-                {
-                    name: 'm05'
-                },
-                {
-                    name: 'm06'
-                },
-                {
-                    name: 'm07'
-                },
-                {
-                    name: 'm08'
-                },
-                {
-                    name: 'm09'
-                },
-                {
-                    name: 'm10'
-                },
-                {
-                    name: 'm11'
-                },
-                {
-                    name: 'm12'
-                },
-                {
-                    name: 'summa'
-                }
-            ]
+  stores: {
+    cyear: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/cyear.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
         }
+      },
+      fields: [
+        {
+          name: 'cyear'
+        }
+      ]
+    },
+    Error1: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/Error1.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'cdate'
+        },
+        {
+          name: 'name'
+        },
+        {
+          name: 'path'
+        },
+        {
+          name: 'cyear'
+        },
+        {
+          name: 'par_id'
+        }
+      ]
+    },
+    dOpis: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/Opis-status.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'name'
+        }
+      ]
+    },
+    dRetro: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/Retro-status.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'name'
+        }
+      ]
+    },
+    vYears: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/getYears.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'name'
+        }
+      ]
+    },
+    statCommon: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/statCommon.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'name'
+        },
+        {
+          name: 'm01'
+        },
+        {
+          name: 'm02'
+        },
+        {
+          name: 'm03'
+        },
+        {
+          name: 'm04'
+        },
+        {
+          name: 'm05'
+        },
+        {
+          name: 'm06'
+        },
+        {
+          name: 'm07'
+        },
+        {
+          name: 'm08'
+        },
+        {
+          name: 'm09'
+        },
+        {
+          name: 'm10'
+        },
+        {
+          name: 'm11'
+        },
+        {
+          name: 'm12'
+        },
+        {
+          name: 'summa'
+        }
+      ]
     }
+  }
 
 });

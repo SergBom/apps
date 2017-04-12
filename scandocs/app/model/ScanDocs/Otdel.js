@@ -14,19 +14,19 @@
  */
 
 Ext.define('Portal.model.ScanDocs.Otdel', {
-    extend: 'Ext.data.Model',
-    alias: 'model.Otdel',
+  extend: 'Ext.data.Model',
+  alias: 'model.Otdel',
 
-    requires: [
-        'Ext.data.field.Field'
-    ],
+  requires: [
+    'Ext.data.field.Field'
+  ],
 
-    fields: [
-        {
-            name: 'name'
-        },
-        {
-            name: 'id'
-        }
-    ]
+  fields: [
+    {
+      name: 'name'
+    },
+    {
+      name: 'id'
+    }
+  ]
 });

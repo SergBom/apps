@@ -14,51 +14,51 @@
  */
 
 Ext.define('Portal.store.ScanDocs.MainData', {
-    extend: 'Ext.data.Store',
-    alias: 'store.MainData',
+  extend: 'Ext.data.Store',
+  alias: 'store.MainData',
 
-    requires: [
-        'Portal.model.ScanDocs.MainData',
-        'Ext.data.proxy.Ajax',
-        'Ext.data.reader.Json',
-        'Ext.data.writer.Json'
-    ],
+  requires: [
+    'Portal.model.ScanDocs.MainData',
+    'Ext.data.proxy.Ajax',
+    'Ext.data.reader.Json',
+    'Ext.data.writer.Json'
+  ],
 
-    constructor: function(cfg) {
-        var me = this;
-        cfg = cfg || {};
-        me.callParent([Ext.apply({
-            storeId: 'ScanDocs.MainData',
-            autoLoad: false,
-            model: 'Portal.model.ScanDocs.MainData',
-            proxy: {
-                type: 'ajax',
-                api: {
-                    create: 'data/ScanDocs/MainData-edit.php',
-                    read: 'data/ScanDocs/MainData.json.php',
-                    update: 'data/ScanDocs/MainData-edit.php',
-                    destroy: 'data/ScanDocs/MainData-delete.php'
-                },
-                extraParams: {
-                    dateBegin: '',
-                    dateEnd: '',
-                    Otdel: '',
-                    cyear: '',
-                    opis: '',
-                    retro: ''
-                },
-                url: 'data/ScanDocs/MainData.json.php',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                },
-                writer: {
-                    type: 'json',
-                    writeAllFields: true,
-                    encode: true,
-                    rootProperty: 'data'
-                }
-            }
-        }, cfg)]);
-    }
+  constructor: function(cfg) {
+    var me = this;
+    cfg = cfg || {};
+    me.callParent([Ext.apply({
+      storeId: 'ScanDocs.MainData',
+      autoLoad: false,
+      model: 'Portal.model.ScanDocs.MainData',
+      proxy: {
+        type: 'ajax',
+        api: {
+          create: 'data/ScanDocs/MainData-edit.php',
+          read: 'data/ScanDocs/MainData.json.php',
+          update: 'data/ScanDocs/MainData-edit.php',
+          destroy: 'data/ScanDocs/MainData-delete.php'
+        },
+        extraParams: {
+          dateBegin: '',
+          dateEnd: '',
+          Otdel: '',
+          cyear: '',
+          opis: '',
+          retro: ''
+        },
+        url: 'data/ScanDocs/MainData.json.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        },
+        writer: {
+          type: 'json',
+          writeAllFields: true,
+          encode: true,
+          rootProperty: 'data'
+        }
+      }
+    }, cfg)]);
+  }
 });

@@ -14,7 +14,7 @@
  */
 
 Ext.define('Portal.view.ScanDocs.dpdViewModel', {
-    extend: 'Ext.app.ViewModel',
-    alias: 'viewmodel.scandocs.dpd'
+  extend: 'Ext.app.ViewModel',
+  alias: 'viewmodel.scandocs.dpd'
 
 });
