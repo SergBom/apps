@@ -15,9 +15,9 @@ $id = $_GET['id'];
 	
 
 if($id=="root")	{
-	$w = "";
+	$w = ""; //"WHERE main_group>1";
 } else {
-	$w = "WHERE otdel_id='$id'";
+	$w = "WHERE  otdel_id='$id'"; //"WHERE main_group>1 AND otdel_id='$id'";
 }
 
 	$stP = $db->query("SELECT * FROM v_users_switch $w ORDER BY userFm,userIm,userOt");

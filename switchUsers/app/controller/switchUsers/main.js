@@ -17,7 +17,8 @@ Ext.define('Portal.controller.switchUsers.main', {
   extend: 'Ext.app.Controller',
 
   stores: [
-    'switchUsers.tree'
+    'switchUsers.tree',
+    'switchUsers.users'
   ],
   views: [
     'switchUsers.main',

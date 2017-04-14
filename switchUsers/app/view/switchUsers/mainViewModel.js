@@ -15,65 +15,6 @@
 
 Ext.define('Portal.view.switchUsers.mainViewModel', {
   extend: 'Ext.app.ViewModel',
-  alias: 'viewmodel.switchusers.main',
-
-  requires: [
-    'Ext.data.Store',
-    'Ext.data.proxy.Ajax',
-    'Ext.data.reader.Json',
-    'Ext.data.field.Date',
-    'Ext.data.field.Boolean'
-  ],
-
-  stores: {
-    users: {
-      proxy: {
-        type: 'ajax',
-        url: 'data/switchUsers/data.php',
-        reader: {
-          type: 'json',
-          rootProperty: 'data'
-        }
-      },
-      fields: [
-        {
-          name: 'id'
-        },
-        {
-          name: 'username'
-        },
-        {
-          name: 'main_group'
-        },
-        {
-          name: 'userFm'
-        },
-        {
-          name: 'userIm'
-        },
-        {
-          name: 'userOt'
-        },
-        {
-          name: 'otdel_id'
-        },
-        {
-          type: 'date',
-          name: 'dateOff'
-        },
-        {
-          type: 'date',
-          name: 'dateOn'
-        },
-        {
-          name: 'ad_state'
-        },
-        {
-          type: 'boolean',
-          name: 'off'
-        }
-      ]
-    }
-  }
+  alias: 'viewmodel.switchusers.main'
 
 });

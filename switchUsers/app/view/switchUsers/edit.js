@@ -24,11 +24,11 @@ Ext.define('Portal.view.switchUsers.edit', {
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
     'Ext.form.FieldSet',
-    'Ext.form.FieldContainer',
     'Ext.form.field.Hidden',
     'Ext.form.field.ComboBox',
     'Ext.form.field.Checkbox',
-    'Ext.form.field.Date'
+    'Ext.form.field.Date',
+    'Ext.form.field.HtmlEditor'
   ],
 
   controller: 'switchusers.edit',
@@ -36,10 +36,11 @@ Ext.define('Portal.view.switchUsers.edit', {
     type: 'switchusers.edit'
   },
   modal: true,
-  height: 309,
+  height: 482,
   width: 542,
   layout: 'fit',
   title: 'Данные о пользователе',
+  defaultListenerScope: true,
 
   items: [
     {
@@ -62,7 +63,10 @@ Ext.define('Portal.view.switchUsers.edit', {
                   iconCls: 'dialog-save',
                   text: 'Сохранить',
                   listeners: {
-                    click: 'onSaveClick'
+                    click: {
+                      fn: 'onSaveClick',
+                      scope: 'controller'
+                    }
                   }
                 },
                 {
@@ -70,7 +74,10 @@ Ext.define('Portal.view.switchUsers.edit', {
                   iconCls: 'dialog-cancel',
                   text: 'Отмена',
                   listeners: {
-                    click: 'onCancelClick'
+                    click: {
+                      fn: 'onCancelClick',
+                      scope: 'controller'
+                    }
                   }
                 }
               ]
@@ -86,7 +93,32 @@ Ext.define('Portal.view.switchUsers.edit', {
               items: [
                 {
                   xtype: 'button',
+                  disabled: true,
                   text: 'Данные учетной записи АИС ЕГРП'
+                }
+              ]
+            },
+            {
+              xtype: 'container',
+              userCls: 'b-001',
+              layout: {
+                type: 'hbox',
+                align: 'middle',
+                pack: 'center',
+                padding: 5
+              },
+              items: [
+                {
+                  xtype: 'button',
+                  iconCls: 'icon-user-del',
+                  text: '',
+                  tooltip: 'Удалить пользователя',
+                  listeners: {
+                    click: {
+                      fn: 'onDelUserClick',
+                      scope: 'controller'
+                    }
+                  }
                 }
               ]
             }
@@ -134,22 +166,40 @@ Ext.define('Portal.view.switchUsers.edit', {
           fieldLabel: 'Label',
           name: 'id',
           listeners: {
-            change: 'onIDChange'
+            change: {
+              fn: 'onIDChange',
+              scope: 'controller'
+            }
           }
         },
         {
           xtype: 'fieldset',
-          title: 'Отдел',
+          title: 'Отдел / Должность',
           items: [
             {
               xtype: 'combobox',
               anchor: '100%',
               name: 'otdel_id',
+              editable: false,
+              emptyText: 'Отдел',
               autoLoadOnValue: true,
               displayField: 'name',
               valueField: 'id',
               bind: {
                 store: '{otdels}'
+              }
+            },
+            {
+              xtype: 'combobox',
+              anchor: '100%',
+              name: 'dolzhnost_id',
+              editable: false,
+              emptyText: 'Должность',
+              autoLoadOnValue: true,
+              displayField: 'name',
+              valueField: 'id',
+              bind: {
+                store: '{dolzhnost}'
               }
             }
           ]
@@ -159,11 +209,30 @@ Ext.define('Portal.view.switchUsers.edit', {
           title: 'Планировщик',
           items: [
             {
-              xtype: 'checkboxfield',
-              anchor: '100%',
-              fieldLabel: 'В данный момент "Выключен"',
-              labelWidth: 200,
-              name: 'off'
+              xtype: 'fieldcontainer',
+              layout: {
+                type: 'hbox',
+                align: 'stretchmax'
+              },
+              items: [
+                {
+                  xtype: 'checkboxfield',
+                  disabled: true,
+                  disabledCls: 'x-item',
+                  fieldLabel: 'В данный момент "Выключен"',
+                  labelClsExtra: 'user-off',
+                  labelWidth: 180,
+                  name: 'off'
+                },
+                {
+                  xtype: 'checkboxfield',
+                  padding: '0 0 0 50',
+                  fieldLabel: '"Видимый"',
+                  labelClsExtra: 'user-nosay',
+                  labelWidth: 80,
+                  name: 'say'
+                }
+              ]
             },
             {
               xtype: 'fieldcontainer',
@@ -171,25 +240,47 @@ Ext.define('Portal.view.switchUsers.edit', {
               items: [
                 {
                   xtype: 'datefield',
+                  reference: 'dateOff',
                   fieldLabel: 'Выключить с',
                   labelWidth: 80,
                   name: 'dateOff',
-                  format: 'Y-m-d'
+                  format: 'Y-m-d',
+                  listeners: {
+                    change: 'onDatefieldChange'
+                  }
                 },
                 {
                   xtype: 'datefield',
+                  reference: 'dateOn',
                   padding: '0 0 0 10',
                   fieldLabel: 'Включить с',
                   labelWidth: 80,
                   name: 'dateOn',
-                  format: 'Y-m-d'
+                  format: 'Y-m-d',
+                  listeners: {
+                    change: 'onDatefieldChange1'
+                  }
                 }
               ]
             }
           ]
+        },
+        {
+          xtype: 'htmleditor',
+          anchor: '100%',
+          height: 133,
+          name: 'refer'
         }
       ]
     }
-  ]
+  ],
+
+  onDatefieldChange: function(field, newValue, oldValue, eOpts) {
+    this.getReferences().dateOn.setMinValue(newValue);
+  },
+
+  onDatefieldChange1: function(field, newValue, oldValue, eOpts) {
+    this.getReferences().dateOff.setMaxValue(newValue);
+  }
 
 });

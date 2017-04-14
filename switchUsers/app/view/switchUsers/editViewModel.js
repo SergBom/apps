@@ -42,6 +42,24 @@ Ext.define('Portal.view.switchUsers.editViewModel', {
           name: 'name'
         }
       ]
+    },
+    dolzhnost: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/switchUsers/dolzhnost-list.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'name'
+        }
+      ]
     }
   }
 

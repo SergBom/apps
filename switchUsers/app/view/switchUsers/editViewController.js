@@ -18,9 +18,11 @@ Ext.define('Portal.view.switchUsers.editViewController', {
   alias: 'controller.switchusers.edit',
 
   onSaveClick: function(button, e, eOpts) {
-    this.getReferences().form.getForm().submit({
+    var me=this;
+    me.getReferences().form.getForm().submit({
       success:function(f,a) {
-        this.getView().close();
+        Ext.getStore('switchUsers.users').reload();
+        me.getView().close();
       },
       failure:function(f,a) {
         Ext.Msg.alert('Failed',a.result.msg);
@@ -30,6 +32,43 @@ Ext.define('Portal.view.switchUsers.editViewController', {
 
   onCancelClick: function(button, e, eOpts) {
     this.getView().close();
+  },
+
+  onDelUserClick: function(button, e, eOpts) {
+    var me=this,id=me.getReferences().form.getValues().id;
+    Ext.Msg.show({
+      title:'Внимание!',
+      message:'Вы действительно желаете удалить данного пользователя?<br>Удаление производится <u>на Портале, в Домене и в базе ЕГРП</u>?!<br><font color="red"><b>Восстановление будет невозможно!</b></font>',
+      buttons:Ext.Msg.YESNO,
+      icon:Ext.Msg.QUESTION,
+      fn:function(b){
+        if(b==='yes'){
+          Ext.Msg.show({
+            title:'Внимание!',
+            message:'<font color="red"><b>Последний раз спрашиваю: Абсолютно уверен, что надо удалить этого пользователя?<br><u>Восстановление будет невозможно!</u></b></font>',
+            buttons:Ext.Msg.YESNO,
+            icon:Ext.Msg.QUESTION,
+            fn:function(btn){
+              if(btn==='yes'){
+                var Mask=new Ext.LoadMask({msg:'Работаю...'}).show();
+                Ext.Ajax.request({
+                  url:'data/switchUsers/userDel.php',
+                  params:{id:id},
+                  success: function(r,o) {
+                    Mask.destroy();
+                    var m=Portal.util.Util.decodeJSON(r.responseText).msg;
+                    Ext.Msg.alert('Результат операции',m);
+                    Ext.getStore('switchUsers.users').reload();
+                    //console.log(me.getView());
+                    me.getView().close();
+                  },
+                  failure: function(r,o) {
+                    Mask.destroy();
+                    Ext.Msg.alert('Результат операции','server-side failure with status code '+r.status);
+                  }
+                });
+              }},scope:me});
+            }},scope:me});
   },
 
   onIDChange: function(field, newValue, oldValue, eOpts) {

@@ -64,6 +64,7 @@ if( $id[1] == '0' ) {  // *********** Новая запись - Только т�
 			tel2 = '".trim($a->tel2)."',
 			telIP = '".trim($a->telIP)."',
 			email = '".trim($a->email)."',
+			refer = '".trim($a->refer)."',
 			dolzhnost_id = '{$a->dolzhnost_id}',
 			say=$say,
 			$org_id 
@@ -96,7 +97,7 @@ if( $id[1] == '0' ) {  // *********** Новая запись - Только т�
 			if($r_new['email']) {$entry['mail']				=	"{$r_new['email']}";}
 			if($r_new['tel2'])  {$entry['mobile']			=	"{$r_new['tel2']}";}
 			$entry['facsimiletelephonenumber']				=	"888999000";
-			$entry['info']		=	"Информация, заметки";
+			//$entry['info']		=	"Информация, заметки";
 			$entry['st']		=	'Мурманская область'; // - Область
 			if($_address)				{$entry['streetAddress']=	"$_address";}
 			if($r_new['org_name'])		{$entry['company']		=	"{$r_new['org_name']}";}
@@ -145,6 +146,7 @@ if( $id[1] == '0' ) {  // *********** Новая запись - Только т�
 			tel2 = '".trim($a->tel2)."',
 			telIP = '".trim($a->telIP)."',
 			email = '".trim($a->email)."',
+			refer = '".trim($a->refer)."',
 			dolzhnost_id = '{$a->dolzhnost_id}',
 			say=$say,
 			org_id = {$a->org_id_h},

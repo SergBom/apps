@@ -10,18 +10,22 @@ header('Content-type: text/html; charset=utf-8');
 /************************************************************************/
 
 $off = ( isset($_POST['off']) ) ? true : false;
+$say = ( isset($_POST['say']) ) ? 1 : 0;
 $dOff = ( $_POST['dateOff'] ) ? "'".$_POST['dateOff']."'" : "NULL";
 $dOn  = ( $_POST['dateOn'] )  ? "'".$_POST['dateOn']."'"  : "NULL";
 
 /************************************************************************/
 
-
+//echo "say=$say _POST['say']={$_POST['say']}";
 
 $sql = "UPDATE `prt#users` SET 
 	userFm = '{$_POST['userFm']}',
 	userIm = '{$_POST['userIm']}',
 	userOt = '{$_POST['userOt']}',
 	otdel_id = '{$_POST['otdel_id']}',
+	dolzhnost_id = '{$_POST['dolzhnost_id']}',
+	refer = '{$_POST['refer']}',
+	say = '$say',
 	dateOff = $dOff,
 	dateOn = $dOn
 	WHERE id='{$_POST['id']}'
@@ -29,15 +33,16 @@ $sql = "UPDATE `prt#users` SET
 
 $msg = "$sql<br>";
 
-	$db		= ConnectPDO('Portal');
+	$dbo = ConnectPDO('Portal');
 
-	$db->query($sql);
+	$dbo->query($sql);
+	
+	user_update2ad($_POST['id']);
 
 echo json_encode( array("success"=>"true","msg"=>$msg));
 
-/*
-	$db		= ConnectPDO('Portal');
-	
+
+/*	
 	$rP = $db->query("SELECT userFm,userIm,userOt FROM `prt#users` WHERE id='$id'")->fetch();
 
 /*	$dbora	= ConnectGRP();

@@ -22,7 +22,7 @@ Ext.define('Portal.view.switchUsers.mainViewController', {
   },
 
   onTreeSelectionChange: function(model, selected, eOpts) {
-    this.getStore('users').load({params:{id:selected[0].id}});
+    Ext.getStore('switchUsers.users').load({params:{id:selected[0].id}});
   },
 
   onGridItemDblClick: function(dataview, record, item, index, e, eOpts) {

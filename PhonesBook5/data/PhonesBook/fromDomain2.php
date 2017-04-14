@@ -1,18 +1,18 @@
 <?php
 $isCLI = ( php_sapi_name() == 'cli' );
-if($isCLI){
-	include_once("/var/www/portal/public_html/php/init.php");
-	include_once("/var/www/portal/public_html/php/ldap/ldap-func.php");
-}else{
-	include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init.php");
-	include_once("{$_SERVER['DOCUMENT_ROOT']}/php/ldap/ldap-func.php");
-}
+$_include_path = ($isCLI) ? "/var/www/portal/public_html" : $_SERVER['DOCUMENT_ROOT'];
+include_once($_include_path."/php/init2.php");
+include_once($_include_path."/php/ldap/ldap-func2.php");
 //header('Content-type: text/html; charset=utf-8');
 echo "<!DOCTYPE html><html><head><meta charset='utf-8'></head><body>";
 
 
+//$now = time();
+
+
+
 /*---------------------------------------------------------------------------*/
-    $db = ConnectMyDB('portal');
+    $dbo = ConnectPDO('portal');
 /*---------------------------------------------------------------------------*/
 
 //$domain = $adata->domain; //"MURMANSK.NET";
@@ -20,7 +20,7 @@ $domain = "MURMANSK.NET";
 //$domain = "локально";
 //$domain = "KP51.LOCAL";
 
-$domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" );
+$domain_id	= $dbo->query( "select id FROM `prt#domains`	where name = '$domain'" )->fetchColumn();
 
 /*---------------------------------------------------------------------------*/
 	$adata = $_GET; //(object)$_GET;
@@ -60,9 +60,9 @@ $domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" 
 			$ldapBase[0] =  $ad_conn['user_dn'] .",". $ad_conn['base'];
 
 		// ---------- Проверяем удаленных пользователей в домене
-		$sql = "SELECT id, username FROM `prt#users` WHERE domain_id='$domain_id'";
-		if ( $result = $db->query($sql) ){
-			while ($row = $result->fetch_assoc()) {
+		$sql = "SELECT id, username,dateOff,dateOn,ad_state,off FROM `prt#users` WHERE domain_id='$domain_id'";
+		if ( $result = $dbo->query($sql) ){
+			while ($row = $result->fetch()) {
 
 				$c=0;
 				foreach( $ldapBase as $v ){
@@ -73,19 +73,78 @@ $domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" 
 
 				echo "{$row['username']}({$row['id']}) => $c";
 		
-				if($c==0){ // Удаляем, если пользователя в домене не существует
+				if( !$sr ){ // Удаляем, если пользователя в домене не существует
 					echo " ---> <font color='red'>Удаляем</font>";
 					echo " | >> prt#users_ad_group";
-						$db->query("DELETE FROM `prt#users_ad_group`	WHERE user_id={$row['id']}");
+						//$dbo->query("DELETE FROM `prt#users_ad_group`	WHERE user_id={$row['id']}");
 					echo " - Delete";
 					echo " | >> prt#users_group";
-						$db->query("DELETE FROM `prt#users_group` 		WHERE user_id={$row['id']}");
+						//$dbo->query("DELETE FROM `prt#users_group` 		WHERE user_id={$row['id']}");
 					echo " - Delete";
 					echo " | >> prt#users";
-						$db->query("DELETE FROM `prt#users` 			WHERE id={$row['id']}");
+						//$dbo->query("DELETE FROM `prt#users` 			WHERE id={$row['id']}");
 					echo " - Delete";
 				}else{
 					echo " ---> <font color='blue'>Оставляем</font>";
+					/////////////////////////////////////////////////////////
+					/// now - сегодня
+					/// ----------------
+					/// Условие обязательное: dateOff < dateOn - задается и выполняется на уровне интерфейса
+					/// ----------------
+					/// dateOn > now 
+					///     |- dateOff is NULL OR dateOff <= now *** Выключить
+					/// ---
+					/// dateOff <= now 
+					///     |- dateOn is NULL OR dateOn > now *** Выключить
+					/// ---
+					/// В остальных случаях Включить
+					/////////////////////////////////////////////////////////
+					
+					//echo "NOW ='$now' strtotme='".strtotime("now")."'   DIFF='".dateDiff($row['dateOff'])."' dateOff='{$row['dateOff']}'";
+					
+					$dOFF = dateDiff($row['dateOff']);
+					$dON  = dateDiff($row['dateOn']);
+					
+					echo " OFF='".$row['dateOff']."' ON='".$row['dateOn']."' dOFF='$dOFF' dON='$dON'";
+					
+						
+					if($row['dateOff']){
+						if( $dOFF <= 0 ){
+							if($row['dateOn']){
+								if( $dON > 0 ){
+									echo " ---> <font color='red'>Выключить1a</font>";
+								} else {
+									echo " ---> <font color='green'>Включить1a</font>";
+								}
+							} else {
+								echo " ---> <font color='red'>Выключить1b</font>";
+							}
+						} else {
+							echo "???";
+							// dateOff еще не наступила
+							echo " ---> <font color='green'>Включить1к</font>";
+						}
+					} else {
+						if($row['dateOn']){
+							if( $dON > 0 ){
+								echo " ---> <font color='red'>Выключить1c</font>";
+							} else {
+								echo " ---> <font color='green'>Включить1c</font>";
+							}
+						} else {
+							echo " ---> <font color='green'>Включить1d</font>";
+						}
+					}
+
+/*					if( $dON > 0 ){
+						if ( $row['dateOff'] == "" OR $dOFF <= 0 ) {
+							echo " ---> <font color='green'>Выключить1</font>";
+						}
+						
+					}// else 
+*/
+					
+					
 				}
 				echo "<br>";
 			}
@@ -126,19 +185,28 @@ $domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" 
 				}else{
 					echo "<font color='red'>";
 				}
+				
+				$fio = explode(" ",$cn);
+				//print_r($fio);
+				if( count($fio)==3 and strlen(@$fio[1])>2 ){ //and substr($fio[1],1,1)=='.' ){
+					$Fm = $fio[0];
+					$Im = $fio[1];
+					$Ot = $fio[2];
+				}
+
+
+
 				echo "** LOGIN=$sa **</font><br>";
 				echo "** dn=$dn **<br>";
 				//echo "UAC = $uac<br> dis = $disable <br> ena = $enable<br>";
 
 				$otdel_dn = user_dn_container($dn);
-				$otdel_id = $db->getOne("SELECT id FROM `prt#otdels` WHERE dn='$otdel_dn'");
+				$otdel_id = $dbo->query("SELECT id FROM `prt#otdels` WHERE dn='$otdel_dn'")->fetchColumn();
 				$otdel_id = ( $otdel_id > 0 ) ? "otdel_id='$otdel_id'," : "";
 			
 				$user_id=0;
 				$sql = "SELECT id,userFm,userIm,userOt FROM `prt#users` WHERE username='$sa' AND domain_id='$domain_id'";
-				$resDb = $db->query($sql);
-				$record = $resDb->fetch_assoc();
-				if($resDb->num_rows==1){
+				if( ($record = $dbo->query($sql)->fetch() ) != false ){
 					// Корректируем ФИО
 					$Fm = ($record['userFm']) ? $record['userFm'] : $Fm;
 					$Im = ($record['userIm']) ? $record['userIm'] : $Im;
@@ -167,8 +235,8 @@ $domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" 
 						say='0',
 						main_group=2
 						";
-					$db->query($sql);
-					$user_id=$db->insertId();
+					$dbo->query($sql);
+					$user_id=$dbo->lastInsertId();
 				} else { // если есть такой пользователь, то обновляем данные из АД
 					$sql = "UPDATE `prt#users` SET 
 						dn='$dn',
@@ -184,30 +252,30 @@ $domain_id	= $db->getOne( "select id FROM `prt#domains`	where name = '$domain'" 
 						off='".($uac - $enable)."',
 						email='$email'
 						WHERE id=$user_id";
-					$db->query($sql);
+					$dbo->query($sql);
 				}
-			echo "$sql<br>";
+				echo "$sql<br>";
 			
 			
 /*				if( isset($ent[$i]['memberof'])){
-					$db->query("DELETE FROM `prt#users_ad_group` WHERE user_id=$user_id");
+					$dbo->query("DELETE FROM `prt#users_ad_group` WHERE user_id=$user_id");
 					for( $k=0; $k < $ent[$i]['memberof']['count']; $k++ ){
 						$sql = "INSERT `prt#users_ad_group` SET user_id=$user_id, group_dn='{$ent[$i]['memberof'][$k]}'";
-						$db->query($sql);
+						$dbo->query($sql);
 						echo "$sql<br>";
 					}
 				}*/
 			
 				echo "================<br>";
-			}
-		}
-	}
+			} // Пользователи
+		} // Домены
+	}// Если подкл. к LDAP
 echo "</body>";
 
 	
 function getOtdels($par_id,$ldapBase)
 {
-	global $db,$ad_conn,$ad_params_orgUnit;
+	global $dbo,$ad_conn,$ad_params_orgUnit;
 			
 			$sr = @ldap_list($ad_conn['ds'], $ldapBase, "(&(name=_otdel*)(objectclass=organizationalUnit))", $ad_params_orgUnit);
 			//echo "sr=$sr<br>";
@@ -222,8 +290,8 @@ function getOtdels($par_id,$ldapBase)
 					echo "description = '".@$ent[$i]['description'][0]."'<br>";
 					echo "dn = '{$ent[$i]['dn']}'<br>";
 
-					$ID 	  = $db->getOne("SELECT id FROM `prt#otdels` WHERE cn='{$ent[$i]["ou"][0]}' AND org_id='{$ad_conn['domain_id']}'");
-					$CountRow = $db->getOne( "SELECT FOUND_ROWS() CountRows" );
+					$ID = $dbo->query("SELECT id FROM `prt#otdels` WHERE cn='{$ent[$i]["ou"][0]}' AND org_id='{$ad_conn['domain_id']}'")->fetchColumn();
+					$CountRow = $dbo->query( "SELECT FOUND_ROWS() CountRows" )->fetchColumn();
 					//echo "ID-C='$ID'<br>";
 					if ( $CountRow == 0 ) {
 						$sql = "INSERT INTO `prt#otdels` SET
@@ -235,20 +303,19 @@ function getOtdels($par_id,$ldapBase)
 								";
 						//echo "$sql<br><br>";
 						echo "Добавили<br>";
-						$result = $db->query($sql);
-						$ID = $db->insertId($result);
+						$result = $dbo->query($sql);
+						$ID = $dbo->lastInsertId();
 					} else {
 						$sql = "UPDATE `prt#otdels` SET
 								par_id = $par_id,
 								org_id = {$ad_conn['domain_id']},
 								name = '".@$ent[$i]["description"][0]."',
-								
 								dn = '{$ent[$i]["dn"]}'
 								WHERE  cn='{$ent[$i]["ou"][0]}' AND org_id='{$ad_conn['domain_id']}'";
 						//echo "$sql<br><br>";
 						echo "Обновили<br>";
 						//  cn = '{$ent[$i]["ou"][0]}',
-						$result = $db->query($sql);
+						$result = $dbo->query($sql);
 					}
 						
 					//echo "ID=$ID=<br>";
@@ -266,6 +333,24 @@ function getOtdels($par_id,$ldapBase)
 			}
 }
 	
+
+function dateDiff($d2){
+	
+	$dt1 = new DateTime( date("Y-m-d") );
+	$dt2 = new DateTime($d2);
+//	$dt1 = date_create('now');
+//	$dt2 = date_create($d2);
+	
+	//if( $dt1 == $dt2  ) { return 0;}
+	//if( $dt1 < $dt2  ) { return -1;}
+	//if( $dt1 > $dt2  ) { return 1;}
+	//echo "dt1='$dt1' dt2='$dt2'";
+	$interval = date_diff($dt1,$dt2);
+	return (int)$interval->format("%R%a");
+	//return $dt2 - $dt1;
+}
+
+
 	
 			//$ldapBaseGroup =  $ad_conn['group_dn'] .",". $ad_conn['base'];
 			
@@ -280,7 +365,7 @@ function getOtdels($par_id,$ldapBase)
 		
 					$sql = "SELECT count(*) FROM `prt#otdels` WHERE cn = '{$ent[$i]["cn"][0]}' AND org_id='{$ad_conn['domain_id']}'";
 					//echo "$sql<br>";
-					$C = $db->getOne($sql);
+					$C = $dbo->getOne($sql);
 					//echo "C='$C'<br>";
 					if ( $C==0 ) { // Если нет в базе, то добавляем
 									
@@ -305,7 +390,7 @@ function getOtdels($par_id,$ldapBase)
 					}
 
 					echo "$sql<br>";
-					$result = $db->query($sql);
+					$result = $dbo->query($sql);
 
 					echo "<br>=====<br>";
 					

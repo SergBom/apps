@@ -52,9 +52,7 @@ Ext.define('Portal.view.switchUsers.main', {
       collapsed: false,
       title: 'Список отделов',
       store: 'switchUsers.tree',
-      animate: true,
       displayField: 'name',
-      singleExpand: true,
       dockedItems: [
         {
           xtype: 'toolbar',
@@ -62,10 +60,16 @@ Ext.define('Portal.view.switchUsers.main', {
           items: [
             {
               xtype: 'button',
-              text: 'Refresh',
+              iconCls: 'icon-refresh',
+              text: 'Обновить список',
               listeners: {
                 click: 'onRefreshClick'
               }
+            },
+            {
+              xtype: 'button',
+              hidden: true,
+              text: 'Запуск синхронизации'
             }
           ]
         }
@@ -78,9 +82,7 @@ Ext.define('Portal.view.switchUsers.main', {
       xtype: 'gridpanel',
       region: 'center',
       title: 'Пользователи',
-      bind: {
-        store: '{users}'
-      },
+      store: 'switchUsers.users',
       columns: [
         {
           xtype: 'rownumberer',
@@ -88,10 +90,11 @@ Ext.define('Portal.view.switchUsers.main', {
         },
         {
           xtype: 'templatecolumn',
-          flex: 1,
+          fixed: true,
           tpl: [
             '{userFm} {userIm} {userOt}'
           ],
+          width: 240,
           dataIndex: 'userFm',
           text: 'Ф.И.О.'
         },
@@ -116,8 +119,29 @@ Ext.define('Portal.view.switchUsers.main', {
           disabledCls: 'x-item',
           width: 68,
           text: 'вкл/выкл'
+        },
+        {
+          xtype: 'checkcolumn',
+          disabled: true,
+          disabledCls: 'x-item',
+          width: 68,
+          dataIndex: 'say',
+          text: 'Видимый'
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'refer',
+          text: 'Заметки'
         }
       ],
+      viewConfig: {
+        getRowClass: function(record, rowIndex, rowParams, store) {
+          //console.log('say='+record.data.say);
+          //console.log('off='+record.data.off);
+          if(!record.data.say){return 'user-nosay';
+          }else if(record.data.off){return 'user-off';}
+        }
+      },
       dockedItems: [
         {
           xtype: 'toolbar',
