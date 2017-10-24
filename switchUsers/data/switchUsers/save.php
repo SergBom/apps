@@ -14,9 +14,19 @@ $say = ( isset($_POST['say']) ) ? 1 : 0;
 $dOff = ( $_POST['dateOff'] ) ? "'".$_POST['dateOff']."'" : "NULL";
 $dOn  = ( $_POST['dateOn'] )  ? "'".$_POST['dateOn']."'"  : "NULL";
 
+$user_data = $_POST;
+
 /************************************************************************/
 
-//echo "say=$say _POST['say']={$_POST['say']}";
+
+	$dbo = ConnectPDO('Portal');
+
+
+		///////////////////////////////////////////////////////////////
+		// Берем исходные данные пользователя
+		$user_data_old	= $dbo->query( "select * FROM v_pbook where id='u-{$_POST['id']}'" )->fetch();
+		
+		
 
 $sql = "UPDATE `prt#users` SET 
 	userFm = '{$_POST['userFm']}',
@@ -31,34 +41,17 @@ $sql = "UPDATE `prt#users` SET
 	WHERE id='{$_POST['id']}'
 ";
 
-$msg = "$sql<br>";
-
-	$dbo = ConnectPDO('Portal');
+	$msg = "$sql<br>";
 
 	$dbo->query($sql);
+
+	user_update2ad($_POST['id'],$user_data_old);
+
 	
-	user_update2ad($_POST['id']);
 
 echo json_encode( array("success"=>"true","msg"=>$msg));
 
 
-/*	
-	$rP = $db->query("SELECT userFm,userIm,userOt FROM `prt#users` WHERE id='$id'")->fetch();
-
-/*	$dbora	= ConnectGRP();
-	
-	$sn = $rP['userFm'].mb_substr($rP['userIm'],0,1,'utf-8').".".mb_substr($rP['userOt'],0,1,'utf-8').".";
-
-	$stdi = oci_parse($dbora,"SELECT id,name,short_name,username FROM rp_emps WHERE E_DATE is NULL AND replace(short_name,' ')='$sn'");
-	oci_execute($stdi);
-	
-	$row = oci_fetch_assoc($stdi);
-
-			echo json_encode( array(
-				"success"=>"true",
-				"data"=>$row
-			));
-*/
 ///////////////////////////////
 //
 // SELECT username, account_status, lock_date, EXPIRY_DATE, CREATED FROM dba_users WHERE account_status = 'OPEN'

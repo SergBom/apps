@@ -18,6 +18,15 @@ header('Content-type: text/html; charset=utf-8');
 $dpd_list = explode("\n",$_POST['dpd_list']);
 
 
+$matches[] = "/^51 \d\d \d\d\d\d\d\d\d \d+$/"; // Правильные номера
+// Условные кадастровые старые номера
+$matches[] = "/^51 \d\d \d\d \d\d \d\d\d \d\d\d \d\d \d\d-\d+$/";
+$matches[] = "/^51 \d\d \d\d \d\d \d\d \d\d \d{2,3}-\d\d\/\d\d\d\d-\d+$/";
+$matches[] = "/^51 \d\d \d\d \d\d \d\d \d\d$/";
+// Условные старые номера
+$matches[] = "/^51-\d\d-\d\d\/\d\d\d\/\d\d\d\d-\d+$/";
+$matches[] = "/^51-\d\d\/\d\d-\d\d\/\d\d\d\d-\d+$/";
+
 
 $count   	= 0;
 $count_bad	= 0;
@@ -26,10 +35,22 @@ $err_dpd 	= "";
 foreach( $dpd_list as $dpd ){
 	
 	$dpd = str_replace(':',' ',trim($dpd));
+	$dpd = str_replace('  ',' ',$dpd);
 	if( $dpd ){
-	
-		if( preg_match("/^\d\d \d\d \d\d\d\d\d\d\d \d+$/", $dpd) ){
 
+//		echo "DPD='$dpd'$cr";
+	
+		$pm = false;
+		foreach( $matches as $fm ){
+			//$t = preg_match($fm, $dpd);
+			$pm = ( preg_match($fm, $dpd) OR $pm );
+			//echo "Temp='$fm' => t='$t' => pm='$pm'$cr";
+		}
+		
+		//echo "pm='$pm' = ";
+	
+	
+		if( $pm ){
 			$c = $pdo->query("SELECT count(*) FROM docs_l1 WHERE `name`='$dpd'")->fetchColumn();
 			if( $c ){
 				//$sql  = "UPDATE docs2 ";
@@ -37,6 +58,13 @@ foreach( $dpd_list as $dpd ){
 				$count_bad++;
 				$err_dpd .= $dpd . " - Дубликат" . $cr;
 			} else {
+				
+				// Определяем отдел
+				
+				
+				
+				
+				// Добавляем в базу
 				$sql = "INSERT INTO docs_l1 SET 
 					`name`='$dpd',
 					`cdate`='{$_POST['dpd_date']}',
@@ -52,7 +80,6 @@ foreach( $dpd_list as $dpd ){
 			$count_bad++;
 			$err_dpd .= $dpd . " - Не верный формат" . $cr;
 		}
-		
 	} 
 	
 }
@@ -66,28 +93,4 @@ foreach( $dpd_list as $dpd ){
 	$c = array('success'=>true,'msg'=>$msg);
 	echo json_encode($c);
 	
-
-
-
-
-
-/*
-	
-	
-	$sql = "select count(*) CNT from cse_cases cc, re_objects ro
-where CC.R_TYPE = 'П' and ro.id = cc.re_id
-and exists(select 1 from cse_folders cf, cse_doc cd where CF.ID = CD.CSF_ID and CF.CSE_ID = cc.id)
-AND ( ro.CAD_NUM = '$CAD_NUM' OR ro.OBJ_NUM = '$CAD_NUM')";
-			
-			//echo $sql.$cr;
-	$stid = oci_parse($db, $sql);	oci_execute($stid);
-	$row = oci_fetch_array($stid);
-	$cnt = $row['CNT'];
-	
-	$pdo->query( "UPDATE docs2 SET opis=$cnt WHERE id={$_POST['id']}" );
-		
-	$c = array('success'=>0,'opis'=>$cnt);
-	echo json_encode($c);
-	
-	*/
 ?>
