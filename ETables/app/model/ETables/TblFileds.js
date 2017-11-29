@@ -22,6 +22,7 @@ Ext.define('Portal.model.ETables.TblFileds', {
 
   fields: [
     {
+      type: 'int',
       name: 'id'
     },
     {

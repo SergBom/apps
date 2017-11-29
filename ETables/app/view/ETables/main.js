@@ -26,10 +26,7 @@ Ext.define('Portal.view.ETables.main', {
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
     'Ext.selection.RowModel',
-    'Ext.grid.column.Number',
-    'Ext.grid.column.Date',
-    'Ext.grid.column.Boolean',
-    'Ext.grid.plugin.CellEditing'
+    'Ext.grid.plugin.RowEditing'
   ],
 
   controller: 'etables.main',
@@ -40,6 +37,7 @@ Ext.define('Portal.view.ETables.main', {
   width: 588,
   layout: 'border',
   title: 'My Panel',
+  defaultListenerScope: true,
 
   items: [
     {
@@ -48,7 +46,7 @@ Ext.define('Portal.view.ETables.main', {
       split: true,
       reference: 'tblMain',
       width: 230,
-      closable: true,
+      collapsible: true,
       title: 'Таблицы',
       store: 'ETables.tables',
       columns: [
@@ -65,8 +63,14 @@ Ext.define('Portal.view.ETables.main', {
       ],
       viewConfig: {
         listeners: {
-          selectionchange: 'onTableSelectionChange',
-          itemdblclick: 'onTableItemDblClick'
+          selectionchange: {
+            fn: 'onTableSelectionChange',
+            scope: 'controller'
+          },
+          itemdblclick: {
+            fn: 'onTableItemDblClick',
+            scope: 'controller'
+          }
         }
       },
       dockedItems: [
@@ -79,7 +83,10 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'btnAdd',
               iconCls: 'icon-add',
               listeners: {
-                click: 'onTAddClick'
+                click: {
+                  fn: 'onTAddClick',
+                  scope: 'controller'
+                }
               }
             },
             {
@@ -93,7 +100,10 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'btnRefresh',
               iconCls: 'icon-refresh',
               listeners: {
-                click: 'onRefreshClick'
+                click: {
+                  fn: 'onRefreshClick',
+                  scope: 'controller'
+                }
               }
             },
             {
@@ -102,7 +112,10 @@ Ext.define('Portal.view.ETables.main', {
               disabled: true,
               iconCls: 'icon-edit',
               listeners: {
-                click: 'onEditClick'
+                click: {
+                  fn: 'onEditClick',
+                  scope: 'controller'
+                }
               }
             },
             {
@@ -111,7 +124,10 @@ Ext.define('Portal.view.ETables.main', {
               disabled: true,
               text: 'MyButton',
               listeners: {
-                click: 'onEditDBClick'
+                click: {
+                  fn: 'onEditDBClick',
+                  scope: 'controller'
+                }
               }
             }
           ]
@@ -131,21 +147,6 @@ Ext.define('Portal.view.ETables.main', {
           xtype: 'gridcolumn',
           dataIndex: 'string',
           text: 'String'
-        },
-        {
-          xtype: 'numbercolumn',
-          dataIndex: 'number',
-          text: 'Number'
-        },
-        {
-          xtype: 'datecolumn',
-          dataIndex: 'date',
-          text: 'Date'
-        },
-        {
-          xtype: 'booleancolumn',
-          dataIndex: 'bool',
-          text: 'Boolean'
         }
       ],
       dockedItems: [
@@ -158,7 +159,10 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'tbAdd',
               iconCls: 'icon-add',
               listeners: {
-                click: 'onTbAddClick'
+                click: {
+                  fn: 'onTbAddClick',
+                  scope: 'controller'
+                }
               }
             },
             {
@@ -166,7 +170,10 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'tbDel',
               iconCls: 'icon-delete',
               listeners: {
-                click: 'onTbDelClick'
+                click: {
+                  fn: 'onTbDelClick',
+                  scope: 'controller'
+                }
               }
             },
             {
@@ -174,7 +181,10 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'tbRefresh',
               iconCls: 'icon-refresh',
               listeners: {
-                click: 'onTbRefreshClick'
+                click: {
+                  fn: 'onTbRefreshClick',
+                  scope: 'controller'
+                }
               }
             }
           ]
@@ -182,7 +192,10 @@ Ext.define('Portal.view.ETables.main', {
       ],
       plugins: [
         {
-          ptype: 'cellediting'
+          ptype: 'rowediting',
+          listeners: {
+            edit: 'onRowEditingEdit'
+          }
         }
       ]
     },
@@ -195,7 +208,25 @@ Ext.define('Portal.view.ETables.main', {
     }
   ],
   listeners: {
-    afterrender: 'onPanelAfterRender'
+    afterrender: {
+      fn: 'onPanelAfterRender',
+      scope: 'controller'
+    }
+  },
+
+  onRowEditingEdit: function(editor, context, eOpts) {
+    var r=this.getReferences(),
+        st=Ext.getStore('ETables.main'),
+        stR=r.MainPanel.getSelection()[0].data.id;
+    context.newValues._t=stR;
+    Ext.Ajax.request({
+        url:'data/ETables/table-upd.php',
+        params:context.newValues,
+        success:function(r){st.reload();}
+    });
+    //r.btnDelRecRef.setDisabled(true);
+    //r.btnAddRecRef.setDisabled(false);
+    //r.btnRefreshRef.setDisabled(false);
   }
 
 });

@@ -28,11 +28,14 @@ Ext.define('Portal.view.ETables.mainViewController', {
 
   onTableItemDblClick: function(dataview, record, item, index, e, eOpts) {
     var r=this.getReferences(),db=record.data,mp=r.MainPanel,
-      newcolumns=[{xtype:'rownumberer'}],
-      MainStore = Ext.getStore('ETables.main'),
-      FieldStore = this.getStore('tbFields');
+      newcolumns=[{xtype:'rownumberer'}],mc=[],
+      MainStore=Ext.getStore('ETables.main'),
+      MainModel=MainStore.getModel();
+    FieldStore=this.getStore('tbFields');
 
-    console.log(db.title);
+    mp.setConfig({itemId:db.id});
+
+    console.log(MainModel);
     mp.setTitle(db.title);
 
     FieldStore.load({params:{main_id:db.id},scope:this,
@@ -53,9 +56,15 @@ Ext.define('Portal.view.ETables.mainViewController', {
           };
           newcolumns.push(tempvar);
         }
+        mc.push({
+          name:r.field_name,
+          type:r.xtype
+        });
       });
 
+      //MainModel.setConfig({fields:mc});
       mp.reconfigure(MainStore, newcolumns);
+      console.log(MainModel);
     }});
     MainStore.load({params:{id:db.id}});
   },
@@ -83,19 +92,49 @@ Ext.define('Portal.view.ETables.mainViewController', {
   },
 
   onTbAddClick: function(button, e, eOpts) {
-    //console.log(this.getView().getItemId());
-    var view=this.getView(),
-      rec = new Portal.model.ETables.TblFileds({
-        a_id:view.getItemId(),
-        field_title:'',
-        field_type:'VARCHAR',
-        field_len:20,
-        field_order:0,
-        id:0
-      });
+    var r=this.getReferences(),tb=r.MainPanel,st=Ext.getStore('ETables.main'),
+      id=tb.getItemId();
 
-    this.getStore('fields').insert(0, rec);
-    this.getReferences().table.findPlugin('rowediting').startEdit(rec, 0);
+    /*
+    var M=Ext.data.schema.Schema.instances.default.hasEntity('Portal.model.ETables.main');
+    console.log(M);
+
+
+    Ext.Ajax.request({
+    url: 'data/ETables/getModelMain.php?main_id='+id,
+
+    success: function(response, opts) {
+    var obj = Ext.decode(response.responseText);
+    console.dir(obj.data);
+
+    eval(obj.data);
+
+    st.insert(0, rec);
+    tb.findPlugin('rowediting').startEdit(rec, 0);
+    },
+
+    failure: function(response, opts) {
+    console.log('server-side failure with status code ' + response.status);
+    }
+    });
+
+    */
+
+    //console.log(st.getModel());
+
+    console.log(st.getFields());
+    st.insert(0); //, {id:0});
+    tb.getView().select(0);
+    var rec=tb.getSelection()[0];
+    //u=tb.findPlugin('rowediting').startEdit(rec, 0);
+
+    console.log(rec);
+    //var view=this.getView();
+    /*var rec = new Portal.model.ETables.TblFileds({
+    id:0
+    });*/
+
+
   },
 
   onTbDelClick: function(button, e, eOpts) {

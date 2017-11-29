@@ -17,7 +17,8 @@ Ext.define('Portal.controller.ETables.main', {
   extend: 'Ext.app.Controller',
 
   models: [
-    'ETables.TblFileds'
+    'ETables.TblFileds',
+    'ETables.main'
   ],
   stores: [
     'ETables.tables',

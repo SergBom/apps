@@ -4,6 +4,7 @@ header('Content-type: text/html; charset=utf-8');
 
 /*-------------------------- Входные переменные -----------------------------*/
 $name = trim( $_POST['name'] );
+$cdate = trim( $_POST['cdate'] );
 $cyear = trim( $_POST['cyear'] );
 $path = trim( $_POST['path'] );
 /*---------------------------------------------------------------------------*/
@@ -63,7 +64,7 @@ $path = trim( $_POST['path'] );
 	}
 
 	if( $rename ){
-		$sql = "UPDATE docs_l1 SET name='$name' WHERE id={$_POST['id']}";
+		$sql = "UPDATE docs_l1 SET name='$name', cdate='$cdate' WHERE id={$_POST['id']}";
 		$db->query($sql);
 
 		$msg = "Переименовано успешно!";
