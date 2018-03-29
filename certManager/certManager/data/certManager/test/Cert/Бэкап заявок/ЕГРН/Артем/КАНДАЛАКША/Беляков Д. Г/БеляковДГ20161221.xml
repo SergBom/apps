@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<head>
+  <person name="Беляков Данила Геннадьевич">
+    <org>Сотрудники Росреестра и его территориальных органов</org>
+    <textBoxFIO_I>Беляков Данила Геннадьевич</textBoxFIO_I>
+    <textBoxPost_I>
+    </textBoxPost_I>
+    <textBoxOU>
+    </textBoxOU>
+    <textBoxEmail>51_upr@rosreestr.ru</textBoxEmail>
+    <textBoxCodeWord>
+    </textBoxCodeWord>
+    <maskedTextBoxSerialNumberP>47 03 № 677307</maskedTextBoxSerialNumberP>
+    <dateTimePickerWhenGiveP>25.05.2003</dateTimePickerWhenGiveP>
+    <textBoxWhoGiveP>ОТДЕЛОМ ВНУТРЕННИХ ДЕЛ ГОР. КАНДАЛАКШИ МУРМАНСКОЙ ОБЛАСТИ</textBoxWhoGiveP>
+    <textBoxPasportAddress>ОБЛ МУРМАНСКАЯ@@ГОР. КАНДАЛАКША@УЛ. НОВАЯ@10@КОРП. 3@12</textBoxPasportAddress>
+    <maskedTextBoxSNILS>05997056017</maskedTextBoxSNILS>
+    <OID0>Защищенная электронная почта</OID0>
+    <OID1>Формирование документов как результата оказания услуги со стороны органов регистрации прав</OID1>
+  </person>
+  <org org="Беляков Данила Геннадьевич">
+    <textBoxOrg_I>Управление Росреестра по Мурманской области</textBoxOrg_I>
+    <textBoxPostDir_I>Руководитель</textBoxPostDir_I>
+    <textBoxPostDir_V>Руководителя</textBoxPostDir_V>
+    <textBoxFIO_Dir_I>Наймушина Софья Григорьевна</textBoxFIO_Dir_I>
+    <textBoxFIO_Dir_V>Наймушиной Софьи Григорьевны</textBoxFIO_Dir_V>
+    <textBoxDover>приказа Министерства экономического развития Российской Федерации от 09.06.2009 № 834-л</textBoxDover>
+    <comboxRegion>51 Мурманская область</comboxRegion>
+    <textBoxCity>Мурманск</textBoxCity>
+    <textBoxAddress>улица Полярные Зори, д.22</textBoxAddress>
+    <maskedTextBoxINN>005190132523</maskedTextBoxINN>
+    <maskedTextBoxOGRN>1045100220285</maskedTextBoxOGRN>
+  </org>
+</head>

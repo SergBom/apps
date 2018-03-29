@@ -1,0 +1,95 @@
+<?php
+include_once("/php/init.php");
+header('Content-type: text/html; charset=utf-8');
+
+/*---------------------------------------------------------------------------*/
+    $db = ConnectMyDB('PhonesBook');
+/*---------------------------------------------------------------------------*/
+
+_get_data($db,$_GET);
+
+
+/*---------------------------------------------------------------------------*/
+function _get_data($db,$adata){	// Вывести список записей
+
+//print_r($adata);
+	
+		// collect request parameters
+		$start  = isset($adata['start'])  ? $adata['start']  :  0;
+		$limit  = isset($adata['limit'])  ? $adata['limit']  : 25;
+//		$end	= $start + $limit;
+		$sort   = isset($adata['sort'])   ? json_decode($adata['sort'])   : null;
+		$inFilter = isset($adata['filter']) ? strtolower($adata['filter']) : null;
+		$filters = isset($adata['filter']) ? "and (lower(Fm) like '%".$inFilter."%' OR lower(Im) like '%".$inFilter."%' OR lower(Ot) like '%".$inFilter."%')"	: null;
+//		$filters = str_replace('property','field',$filters );
+		
+//		echo $adata['missing']."<br>";
+		$missing = ( $adata['missing'] === 'true' ) ? null : "and off<>1";
+//		echo $missing."<br>";
+		
+	
+		$sortDirection = @$sort[0]->direction;
+		$sortProperty  = (@$sort[0]->property) ? @$sort[0]->property : "FIO"; 
+
+//		if (isset($sort[0]->property)){
+//			echo "sort = ".$sort[0]->property;
+//			print_r($sort);
+//		}
+
+		//print_r( $filters );
+		//		echo "<p>$Filter</p>";
+		//$Filter = setFilter( $filters );
+
+	$ifOrgID = isset( $adata['Org_ID'] )  ? " AND Us.Org_ID=".$adata['Org_ID']  :  "";
+	
+	$sql = "SELECT SQL_CALC_FOUND_ROWS
+					Us.id,concat(Fm,' ',Im,' ',Ot) FIO, Us.Tel1, Us.Tel2, Us.TelIP, Us.email, Us.off, Us.Org_ID,
+					Dl.Name Dolzhnost, Ot.Name Otdel, Ad.Name Adr, Us.off_date_begin DateB, Us.off_date_end DateE FROM Users Us
+				left join Dolzhnost Dl on Dl.id = Us.Dolzhnost_ID
+				left join Otdels Ot on Ot.id = Us.Otdel_ID
+				left join Address Ad on Ad.id = Us.Adr_ID
+					WHERE Us.Say=1 AND remove=0 $ifOrgID  $filters  $missing
+					ORDER BY $sortProperty $sortDirection
+					
+			";
+	//LIMIT $start, $limit
+//	echo "<p>".$sql."</p>";
+	
+	if ( $result = $db->query( $sql ) ) {
+	
+		$CountRow = $db->getOne( "SELECT FOUND_ROWS() CountRows" );
+		//$CountRow = $rCount->fetch_assoc($rCount);
+		
+		$data = array();
+		$cnt = 0;
+
+		
+		while ($row = $result->fetch_assoc()) {
+
+			$data[] = array(
+				'id'=>$row['id'],
+//				'Fm'=>$row['Fm'],
+//				'Im'=>$row['Im'],
+//				'Ot'=>$row['Ot'],
+				'FIO'=>$row['FIO'],
+				'Dolzhnost'=>$row['Dolzhnost'],
+				'Otdel'=>$row['Otdel'],
+				'Org_ID'=>$row['Org_ID'],
+				'Adr'=>$row['Adr'],
+				'Tel1'=>$row['Tel1'],
+				'Tel2'=>$row['Tel2'],
+				'TelIP'=>$row['TelIP'],
+				'email'=>$row['email'],
+				'off'=>$row['off'],
+				'date_b'=>$row['DateB'],
+				'date_e'=>$row['DateE']
+				);
+	
+			$cnt++;
+
+		}
+		$c = array('success'=>'true',"total"=>$CountRow,'data'=>$data);
+		echo json_encode($c);
+	}
+}
+?>

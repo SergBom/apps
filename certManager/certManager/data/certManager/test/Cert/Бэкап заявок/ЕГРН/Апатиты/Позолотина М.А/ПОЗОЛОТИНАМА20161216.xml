@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<head>
+  <person name="Позолотина Марина Алексеевна">
+    <org>Сотрудники Росреестра и его территориальных органов</org>
+    <textBoxFIO_I>Позолотина Марина Алексеевна</textBoxFIO_I>
+    <textBoxPost_I>
+    </textBoxPost_I>
+    <textBoxOU>
+    </textBoxOU>
+    <textBoxEmail>51_upr@rosreestr.ru</textBoxEmail>
+    <textBoxCodeWord>
+    </textBoxCodeWord>
+    <maskedTextBoxSerialNumberP>47 09 № 238793</maskedTextBoxSerialNumberP>
+    <dateTimePickerWhenGiveP>18.12.2009</dateTimePickerWhenGiveP>
+    <textBoxWhoGiveP>МЕЖРАЙОННЫМ ОТДЕЛОМ УФМС РОССИИ ПО МУРМАНСКОЙ ОБЛАСТИ В ГОРОДЕ АПАТИТЫ</textBoxWhoGiveP>
+    <textBoxPasportAddress>Мурманская обл.@@г. Кировск@ул. Солнечная@7@@118</textBoxPasportAddress>
+    <maskedTextBoxSNILS>08274904285</maskedTextBoxSNILS>
+    <OID0>Защищенная электронная почта</OID0>
+    <OID1>Формирование документов как результата оказания услуги со стороны органов регистрации прав</OID1>
+  </person>
+  <org org="Позолотина Марина Алексеевна">
+    <textBoxOrg_I>Управление Росреестра по Мурманской области</textBoxOrg_I>
+    <textBoxPostDir_I>Руководитель</textBoxPostDir_I>
+    <textBoxPostDir_V>Руководителя</textBoxPostDir_V>
+    <textBoxFIO_Dir_I>Наймушина Софья Григорьевна</textBoxFIO_Dir_I>
+    <textBoxFIO_Dir_V>Наймушиной Софьи Григорьевны</textBoxFIO_Dir_V>
+    <textBoxDover>приказа Министерства экономического развития Российской Федерации от 09.06.2009 № 834-л</textBoxDover>
+    <comboxRegion>51 Мурманская область</comboxRegion>
+    <textBoxCity>Мурманск</textBoxCity>
+    <textBoxAddress>улица Полярные Зори, д.22</textBoxAddress>
+    <maskedTextBoxINN>005190132523</maskedTextBoxINN>
+    <maskedTextBoxOGRN>1045100220285</maskedTextBoxOGRN>
+  </org>
+</head>

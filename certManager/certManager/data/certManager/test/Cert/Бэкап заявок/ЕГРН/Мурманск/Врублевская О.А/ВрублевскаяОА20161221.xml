@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<head>
+  <person name="Врублевская Оксана Александровна">
+    <org>Сотрудники Росреестра и его территориальных органов</org>
+    <textBoxFIO_I>Врублевская Оксана Александровна</textBoxFIO_I>
+    <textBoxPost_I>
+    </textBoxPost_I>
+    <textBoxOU>
+    </textBoxOU>
+    <textBoxEmail>51_upr@rosreestr.ru</textBoxEmail>
+    <textBoxCodeWord>
+    </textBoxCodeWord>
+    <maskedTextBoxSerialNumberP>47 04 № 938250</maskedTextBoxSerialNumberP>
+    <dateTimePickerWhenGiveP>18.01.2005</dateTimePickerWhenGiveP>
+    <textBoxWhoGiveP>ОТДЕЛОМ ВНУТРЕННИХ ДЕЛ ЛЕНИНСКОГО ОКРУГА ГОРОДА МУРМАНСКА</textBoxWhoGiveP>
+    <textBoxPasportAddress>ОБЛ МУРМАНСКАЯ@@ГОР. МУРМАНСК@УЛ. СВЕРДЛОВА@40@КОРП. 2@198</textBoxPasportAddress>
+    <maskedTextBoxSNILS>10842201816</maskedTextBoxSNILS>
+    <OID0>Защищенная электронная почта</OID0>
+    <OID1>Формирование документов как результата оказания услуги со стороны органов регистрации прав</OID1>
+  </person>
+  <org org="Врублевская Оксана Александровна">
+    <textBoxOrg_I>Управление Росреестра по Мурманской области</textBoxOrg_I>
+    <textBoxPostDir_I>И. о. Руководитель</textBoxPostDir_I>
+    <textBoxPostDir_V>И. о. Руководителя</textBoxPostDir_V>
+    <textBoxFIO_Dir_I>Бойко Анна Сергеевна</textBoxFIO_Dir_I>
+    <textBoxFIO_Dir_V>Бойко Анны Сергеевны</textBoxFIO_Dir_V>
+    <textBoxDover>приказа Министерства экономического развития Российской Федерации от 09.06.2009 № 834-л</textBoxDover>
+    <comboxRegion>51 Мурманская область</comboxRegion>
+    <textBoxCity>Мурманск</textBoxCity>
+    <textBoxAddress>улица Полярные Зори, д.22</textBoxAddress>
+    <maskedTextBoxINN>005190132523</maskedTextBoxINN>
+    <maskedTextBoxOGRN>1045100220285</maskedTextBoxOGRN>
+  </org>
+</head>
