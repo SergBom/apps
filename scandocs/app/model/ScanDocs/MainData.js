@@ -63,6 +63,12 @@ Ext.define('Portal.model.ScanDocs.MainData', {
     },
     {
       name: 'cadraion'
+    },
+    {
+      name: 'otdel'
+    },
+    {
+      name: 'n3'
     }
   ]
 });

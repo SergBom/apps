@@ -17,7 +17,8 @@ Ext.define('Portal.model.ETables.TblFileds', {
   extend: 'Ext.data.Model',
 
   requires: [
-    'Ext.data.field.Integer'
+    'Ext.data.field.Integer',
+    'Ext.data.field.Boolean'
   ],
 
   fields: [
@@ -50,6 +51,17 @@ Ext.define('Portal.model.ETables.TblFileds', {
     },
     {
       name: 'field_title'
+    },
+    {
+      name: 'editor'
+    },
+    {
+      type: 'boolean',
+      name: 'allowBlank'
+    },
+    {
+      type: 'int',
+      name: 'width'
     }
   ]
 });

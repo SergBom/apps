@@ -47,6 +47,9 @@ Ext.define('Portal.store.ETables.tables', {
         },
         {
           name: 'info'
+        },
+        {
+          name: 'refer'
         }
       ]
     }, cfg)]);

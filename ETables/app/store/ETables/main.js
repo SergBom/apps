@@ -17,29 +17,38 @@ Ext.define('Portal.store.ETables.main', {
   extend: 'Ext.data.Store',
 
   requires: [
+    'Portal.model.ETables.main',
     'Ext.data.proxy.Ajax',
     'Ext.data.reader.Json',
-    'Ext.data.field.Field'
+    'Ext.data.writer.Json'
   ],
 
   constructor: function(cfg) {
     var me = this;
     cfg = cfg || {};
     me.callParent([Ext.apply({
-      storeId: 'ETables.main',
+      autoSync: true,
+      model: 'Portal.model.ETables.main',
       proxy: {
         type: 'ajax',
+        api: {
+          create: 'data/ETables/tbMainNew.php',
+          read: 'data/ETables/tbMain.php',
+          update: 'data/ETables/tbMainUpdate.php',
+          destroy: 'data/ETables/tbMainDestroy.php'
+        },
         url: 'data/ETables/tbMain.php',
         reader: {
           type: 'json',
           rootProperty: 'data'
+        },
+        writer: {
+          type: 'json',
+          writeAllFields: true,
+          encode: true,
+          rootProperty: 'data'
         }
-      },
-      fields: [
-        {
-          name: 'id'
-        }
-      ]
+      }
     }, cfg)]);
   }
 });

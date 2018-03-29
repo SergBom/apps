@@ -7,7 +7,7 @@ header('Content-type: text/html; charset=utf-8');
 	$data = array();
 	$a = (object)$_GET; //json_decode($info);
 
-	$table_name = 'tb' . str_pad($a->id,8,'0',STR_PAD_LEFT);
+	$table_name = 'tb' . str_pad($a->a_id,8,'0',STR_PAD_LEFT);
 	
 /*---------------------------------------------------------------------------*/
 
@@ -16,12 +16,15 @@ header('Content-type: text/html; charset=utf-8');
 /*---------------------------------------------------------------------------*/
 
 
-	$sql = "SELECT field_name FROM `S_Tables` WHERE a_id={$a->id} AND field_order>=0";
+	$sql = "SELECT field_name FROM `S_Tables` WHERE a_id={$a->a_id} AND field_order>=0";
 	$ff = $db->query( $sql )->fetchAll(PDO::FETCH_COLUMN);
 	$f = implode(',',$ff);
 
 
-	$sql = "SELECT $f FROM `{$table_name}`";
+	$sql = "SELECT * FROM `{$table_name}`";
+	
+	//echo $sql."<br>";
+	
 	$data = $db->query( $sql )->fetchAll(); //PDO::FETCH_COLUMN);
 	
 /*	

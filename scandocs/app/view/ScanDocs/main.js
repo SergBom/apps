@@ -27,16 +27,16 @@ Ext.define('Portal.view.ScanDocs.main', {
     'Ext.form.field.Date',
     'Ext.form.field.ComboBox',
     'Ext.form.FieldContainer',
-    'Ext.form.Label',
     'Ext.form.field.Display',
+    'Ext.form.Label',
     'Ext.grid.Panel',
     'Ext.view.Table',
     'Ext.grid.column.Action',
+    'Ext.grid.column.Number',
     'Ext.grid.filters.filter.List',
     'Ext.toolbar.Paging',
     'Ext.grid.filters.Filters',
     'Ext.grid.column.Date',
-    'Ext.grid.column.Number',
     'Ext.grid.column.Boolean',
     'Ext.tab.Bar',
     'Ext.grid.column.RowNumberer'
@@ -48,7 +48,7 @@ Ext.define('Portal.view.ScanDocs.main', {
   },
   autoShow: true,
   height: 633,
-  width: 801,
+  width: 1113,
   layout: 'fit',
   title: 'Статистика по отсканированным документам ДПД',
   defaultListenerScope: true,
@@ -81,20 +81,18 @@ Ext.define('Portal.view.ScanDocs.main', {
                   xtype: 'form',
                   reference: 'formPanel',
                   border: false,
-                  height: 218,
                   id: 'formPanel',
                   itemId: 'formPanel',
                   bodyPadding: 4,
-                  header: false,
                   items: [
                     {
                       xtype: 'fieldset',
+                      layout: 'form',
                       title: 'Период',
                       items: [
                         {
                           xtype: 'datefield',
                           fieldLabel: 'Начало',
-                          labelWidth: 50,
                           name: 'dateBegin',
                           format: 'Y-m-d',
                           submitFormat: 'Y-m-d'
@@ -102,15 +100,12 @@ Ext.define('Portal.view.ScanDocs.main', {
                         {
                           xtype: 'datefield',
                           fieldLabel: 'Конец',
-                          labelWidth: 50,
                           name: 'dateEnd',
                           format: 'Y-m-d',
                           submitFormat: 'Y-m-d'
                         },
                         {
                           xtype: 'combobox',
-                          anchor: '100%',
-                          hidden: true,
                           fieldLabel: 'За какой год',
                           name: 'cyear',
                           displayField: 'cyear',
@@ -137,14 +132,11 @@ Ext.define('Portal.view.ScanDocs.main', {
                     },
                     {
                       xtype: 'fieldcontainer',
-                      height: 36,
-                      width: 283,
                       layout: 'fit',
                       items: [
                         {
                           xtype: 'button',
-                          id: 'Calc',
-                          itemId: 'Calc',
+                          height: 30,
                           iconCls: 'icon-calc',
                           text: 'Посчитать',
                           listeners: {
@@ -173,24 +165,16 @@ Ext.define('Portal.view.ScanDocs.main', {
                 {
                   xtype: 'form',
                   reference: 'detailPanel',
-                  height: 156,
-                  itemId: 'detailPanel',
+                  frame: true,
                   padding: 5,
+                  ui: 'default-framed',
                   header: false,
                   url: 'data/ScanDocs/stat1.json.php',
                   items: [
                     {
-                      xtype: 'label',
-                      html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/</a><br>'
-                    },
-                    {
-                      xtype: 'label',
-                      html: '<a href="http://sp.rosreestr.ru:8082/uit/Lists/2017/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/Lists/2017/</a>'
-                    },
-                    {
                       xtype: 'fieldset',
                       layout: 'auto',
-                      title: '---',
+                      title: 'Посчитаем',
                       items: [
                         {
                           xtype: 'displayfield',
@@ -214,6 +198,20 @@ Ext.define('Portal.view.ScanDocs.main', {
                           value: 'считаю...'
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  xtype: 'container',
+                  flex: 1,
+                  items: [
+                    {
+                      xtype: 'label',
+                      html: '<a href="http://sp.rosreestr.ru:8082/uit/lists/list46/2018.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/lists/list46/2018.aspx</a><br>'
+                    },
+                    {
+                      xtype: 'label',
+                      html: '<a href="http://sp.rosreestr.ru:8082/uit/Lists/2017/allitems.aspx" target="blank">http://sp.rosreestr.ru:8082/uit/Lists/2017/</a>'
                     }
                   ]
                 },
@@ -389,15 +387,21 @@ Ext.define('Portal.view.ScanDocs.main', {
                   width: 59,
                   align: 'center',
                   text: 'Список',
-                  iconCls: 'icon-document',
                   items: [
                     {
                       handler: function(view, rowIndex, colIndex, item, e, record, row) {
                         var ed = Ext.create('Portal.view.ScanDocs.Files').show();
-                        ed.setTitle(record.data.name);
-                        ed.setConfig({itemId:record.data.id});
+                        ed.setConfig({title:record.data.name,itemId:record.data.id});
                         ed.getViewModel().getStore('storeFiles').load({params:{dir:record.data.name}});
-                      }
+                      },
+                      iconCls: 'icon-document'
+                    },
+                    {
+                      handler: function(view, rowIndex, colIndex, item, e, record, row) {
+                        var ed = Ext.create('Portal.view.ScanDocs.Tom',{title:record.data.name}).show();
+                        ed.getViewModel().getStore('toms').load({params:{id:record.data.id}});
+                      },
+                      iconCls: 'icon-folder'
                     }
                   ]
                 },
@@ -406,6 +410,14 @@ Ext.define('Portal.view.ScanDocs.main', {
                   width: 83,
                   dataIndex: 'cdate',
                   text: 'Загружено'
+                },
+                {
+                  xtype: 'numbercolumn',
+                  width: 76,
+                  align: 'center',
+                  dataIndex: 'cyear',
+                  text: 'Год ДПД',
+                  format: '0'
                 },
                 {
                   xtype: 'gridcolumn',
@@ -431,18 +443,18 @@ Ext.define('Portal.view.ScanDocs.main', {
                 },
                 {
                   xtype: 'gridcolumn',
-                  flex: 1,
-                  dataIndex: 'cad_name',
-                  text: 'Территория'
-                },
-                {
-                  xtype: 'gridcolumn',
                   flex: 2,
-                  dataIndex: 'n2',
+                  dataIndex: 'otdel',
                   text: 'Территориальный отдел',
                   filter: {
                     type: 'list'
                   }
+                },
+                {
+                  xtype: 'gridcolumn',
+                  flex: 1,
+                  dataIndex: 'n2',
+                  text: 'Тер.отдел (2)'
                 }
               ],
               dockedItems: [
@@ -450,13 +462,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                   xtype: 'pagingtoolbar',
                   dock: 'bottom',
                   displayInfo: true,
-                  store: 'ScanDocs.MainData',
-                  listeners: {
-                    change: {
-                      fn: 'onPTbarChange',
-                      scope: 'controller'
-                    }
-                  }
+                  store: 'ScanDocs.MainData'
                 },
                 {
                   xtype: 'toolbar',
@@ -481,7 +487,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                       text: 'Поиск',
                       listeners: {
                         click: {
-                          fn: 'onButtonClick',
+                          fn: 'onSeek',
                           scope: 'controller'
                         }
                       }
@@ -686,6 +692,7 @@ Ext.define('Portal.view.ScanDocs.main', {
                 },
                 {
                   xtype: 'panel',
+                  hidden: true,
                   layout: 'fit',
                   title: 'Tab 2',
                   dockedItems: [
@@ -722,10 +729,6 @@ Ext.define('Portal.view.ScanDocs.main', {
                       ]
                     }
                   ]
-                },
-                {
-                  xtype: 'panel',
-                  title: 'Tab 3'
                 }
               ],
               tabBar: {
@@ -904,6 +907,116 @@ Ext.define('Portal.view.ScanDocs.main', {
               scope: 'controller'
             }
           }
+        },
+        {
+          xtype: 'panel',
+          layout: 'border',
+          title: 'Статистика подробная',
+          tabConfig: {
+            xtype: 'tab',
+            iconCls: 'icon-stat1'
+          },
+          items: [
+            {
+              xtype: 'form',
+              region: 'west',
+              split: true,
+              reference: 'formStatSotr',
+              width: 237,
+              items: [
+                {
+                  xtype: 'combobox',
+                  anchor: '100%',
+                  fieldLabel: 'Отдел',
+                  labelAlign: 'top',
+                  name: 'otdel',
+                  editable: false,
+                  displayField: 'name',
+                  store: 'ScanDocs.Otdel',
+                  valueField: 'id',
+                  listeners: {
+                    change: {
+                      fn: 'onOtdel',
+                      scope: 'controller'
+                    }
+                  }
+                },
+                {
+                  xtype: 'combobox',
+                  anchor: '100%',
+                  reference: 'sotr',
+                  disabled: true,
+                  fieldLabel: 'Сотрудник',
+                  labelAlign: 'top',
+                  name: 'sotr',
+                  editable: false,
+                  displayField: 'name',
+                  valueField: 'id',
+                  bind: {
+                    store: '{sotr}'
+                  }
+                },
+                {
+                  xtype: 'fieldset',
+                  title: 'Период',
+                  items: [
+                    {
+                      xtype: 'datefield',
+                      anchor: '100%',
+                      fieldLabel: 'С',
+                      name: 'dateB'
+                    },
+                    {
+                      xtype: 'datefield',
+                      anchor: '100%',
+                      fieldLabel: 'По',
+                      name: 'dateE'
+                    }
+                  ]
+                },
+                {
+                  xtype: 'button',
+                  reference: 'btnSaySotr',
+                  text: 'Показать',
+                  listeners: {
+                    click: {
+                      fn: 'onSaySotr',
+                      scope: 'controller'
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              xtype: 'gridpanel',
+              region: 'center',
+              title: 'My Grid Panel',
+              columns: [
+                {
+                  xtype: 'rownumberer'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  dataIndex: 'string',
+                  text: 'Специалист'
+                },
+                {
+                  xtype: 'numbercolumn',
+                  dataIndex: 'number',
+                  text: 'Кол-во сделок'
+                },
+                {
+                  xtype: 'datecolumn',
+                  dataIndex: 'date',
+                  text: 'Кол-во листов'
+                },
+                {
+                  xtype: 'gridcolumn',
+                  text: 'Год ДПД'
+                }
+              ]
+            }
+          ]
         }
       ]
     }

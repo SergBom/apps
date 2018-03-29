@@ -25,6 +25,9 @@ Ext.define('Portal.view.ETables.TblEdit', {
     'Ext.form.field.ComboBox',
     'Ext.grid.column.Number',
     'Ext.form.field.Number',
+    'Ext.grid.column.Check',
+    'Ext.form.field.Checkbox',
+    'Ext.grid.column.Action',
     'Ext.view.Table',
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
@@ -37,14 +40,17 @@ Ext.define('Portal.view.ETables.TblEdit', {
   },
   modal: true,
   height: 422,
-  width: 507,
-  layout: 'fit',
+  minWidth: 1,
+  width: 715,
+  layout: 'border',
   title: 'My Window',
 
   items: [
     {
       xtype: 'gridpanel',
+      region: 'center',
       reference: 'table',
+      disabled: true,
       bind: {
         store: '{fields}'
       },
@@ -79,9 +85,18 @@ Ext.define('Portal.view.ETables.TblEdit', {
         },
         {
           xtype: 'numbercolumn',
-          reference: 'field_len',
           dataIndex: 'field_len',
-          text: 'Размер (длина)',
+          reference: 'field_len',
+          text: 'Размер типа (длина)',
+          format: '0',
+          editor: {
+            xtype: 'numberfield'
+          }
+        },
+        {
+          xtype: 'numbercolumn',
+          dataIndex: 'width',
+          text: 'Ширина столбца',
           format: '0',
           editor: {
             xtype: 'numberfield'
@@ -95,6 +110,35 @@ Ext.define('Portal.view.ETables.TblEdit', {
           editor: {
             xtype: 'numberfield'
           }
+        },
+        {
+          xtype: 'gridcolumn',
+          dataIndex: 'editor',
+          text: 'Редактор',
+          editor: {
+            xtype: 'combobox',
+            displayField: 'name',
+            valueField: 'id',
+            bind: {
+              store: '{e_type}'
+            }
+          }
+        },
+        {
+          xtype: 'checkcolumn',
+          dataIndex: 'allowBlank',
+          text: 'Обязательное',
+          editor: {
+            xtype: 'checkboxfield'
+          }
+        },
+        {
+          xtype: 'actioncolumn',
+          items: [
+            {
+
+            }
+          ]
         }
       ],
       dockedItems: [
@@ -104,6 +148,7 @@ Ext.define('Portal.view.ETables.TblEdit', {
           items: [
             {
               xtype: 'button',
+              reference: 'btnAdd',
               iconCls: 'icon-add',
               listeners: {
                 click: 'onAddClick'
@@ -138,6 +183,32 @@ Ext.define('Portal.view.ETables.TblEdit', {
       listeners: {
         selectionchange: 'onGridSelectionChange'
       }
+    },
+    {
+      xtype: 'panel',
+      region: 'south',
+      height: 74,
+      padding: 5,
+      items: [
+        {
+          xtype: 'container',
+          html: '<center><font color=\'red\'><b>Внимание!</b><br>Редактирование данного раздела может удалить ваши данные!</font></center>',
+          padding: 5
+        },
+        {
+          xtype: 'container',
+          layout: 'fit',
+          items: [
+            {
+              xtype: 'button',
+              text: 'Понимаю риск. Хочу разблокировать и редактировать',
+              listeners: {
+                click: 'onRiskClick'
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   listeners: {

@@ -1,38 +1,31 @@
 <?php
-include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init.php");
+include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init2.php");
 //header('Content-type: text/html; charset=utf-8');
 
 /*-------------------------- Входные переменные -----------------------------*/
-//$Org_id = trim ((!empty($_GET['org'])) ? $_GET['org'] : "1" ); // 
+	$a = (object)$_REQUEST;
 /*---------------------------------------------------------------------------*/
 
-    $db = ConnectMyPDO('Scan_docs');
+    $db = ConnectPDO('Scan_docs');
 
 /*---------------------------------------------------------------------------*/
 
-//$method = $_SERVER['REQUEST_METHOD'];
-//$request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
-//print_r(substr(@$_SERVER['PATH_INFO'], 1));
-
-//$params = parseRequest($method);
-
-_get_data($db,$_POST);
+$p = json_decode($a->f,true);
 
 
-function _get_data($db,$params){	// Вывести список записей
-$data = array();	
-//print_r($params);
+//var_dump($p);
+
 	
-	$begin = ( @$params['dateBegin'] ) ? " AND p2.cdate >= str_to_date('".str_replace('T00:00:00','',@$params['dateBegin'])."', '%Y-%m-%d') " : "";
-	$end   = ( @$params['dateEnd'] )   ? " AND p2.cdate <= str_to_date('".str_replace('T00:00:00','',@$params['dateEnd'])."', '%Y-%m-%d') " : "";
-	$cyear = ( @is_numeric($params['cyear']) )     ? " AND p2.cyear = {$params['cyear']}" : "";
-	$otdel = ( @$params['Otdel'] )     ? " AND p2.n1 = ".@$params['Otdel']." " : "";
+	$begin = ( @$p['dateBegin'] ) ? " AND p2.cdate >= str_to_date('".str_replace('T00:00:00','',@$p['dateBegin'])."', '%Y-%m-%d') " : "";
+	$end   = ( @$p['dateEnd'] )   ? " AND p2.cdate <= str_to_date('".str_replace('T00:00:00','',@$p['dateEnd'])."', '%Y-%m-%d') " : "";
+	$cyear = ( $p['cyear']<>'' ) ? " AND p2.cyear = {$p['cyear']}" : "";	
+	$otdel = ( @$p['Otdel'] )     ? " AND p2.n1 = ". $p['Otdel'] ." " : "";
 
 	
 	$sql = "select * from 
-	(select count(*) count_dpd   from `v_docs3` p2 where 0=0  $begin  $end  $otdel $cyear ) t1,
-	(select count(*) count_opis  from `v_docs3` p2 where p2.opis=1 $begin  $end  $otdel $cyear ) t2,
-	(select count(*) count_retro from `v_docs3` p2 where p2.retro=2 $begin  $end  $otdel $cyear ) t3";
+	(select count(*) count_dpd   from `v_docs` p2 where 0=0  $begin  $end  $otdel $cyear ) t1,
+	(select count(*) count_opis  from `v_docs` p2 where p2.opis=1 $begin  $end  $otdel $cyear ) t2,
+	(select count(*) count_retro from `v_docs` p2 where p2.retro=2 $begin  $end  $otdel $cyear ) t3";
 	
 	
 	
@@ -49,5 +42,5 @@ echo "{
 	}
 }";
 		
-}
+
 ?>

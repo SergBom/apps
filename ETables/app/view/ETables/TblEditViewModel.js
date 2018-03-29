@@ -81,6 +81,30 @@ Ext.define('Portal.view.ETables.TblEditViewModel', {
           name: 'name'
         }
       ]
+    },
+    e_type: {
+      data: [
+        {
+          id: 'textfield',
+          name: 'Текст'
+        },
+        {
+          id: 'numberfield',
+          name: 'Целое число'
+        },
+        {
+          id: 'datefield',
+          name: 'Дата'
+        }
+      ],
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'name'
+        }
+      ]
     }
   }
 

@@ -1,25 +1,16 @@
 <?php
-include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init.php");
+include_once("{$_SERVER['DOCUMENT_ROOT']}/php/init2.php");
 header('Content-type: text/html; charset=utf-8');
 
 /*-------------------------- Входные переменные -----------------------------*/
-//$Org_id = trim ((!empty($_GET['org'])) ? $_GET['org'] : "1" ); // 
 /*---------------------------------------------------------------------------*/
 
-    $db = ConnectMyDB('Scan_docs');
+    $db = ConnectPDO('Scan_docs');
 
 /*---------------------------------------------------------------------------*/
 
-	$data = array();
-	
-	$sql = "SELECT DISTINCT cyear FROM docs_l1 ORDER BY cyear";
-	if ( $result = $db->query( $sql ) ) {
+	//array_push($data, array("cyear"=>"*"));
 
-		array_push($data, array("cyear"=>"*"));
-
-		while ($row = $result->fetch_assoc()) {
-			array_push($data, $row);
-		}
-		echo json_encode(array('success'=>'true','data'=>$data));
-	}
+	$data = $db->query("SELECT DISTINCT cyear FROM docs_l1 ORDER BY cyear")->fetchAll();
+	echo json_encode(array('success'=>'true','data'=>$data));	
 ?>

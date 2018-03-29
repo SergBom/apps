@@ -21,7 +21,9 @@ Ext.define('Portal.view.ScanDocs.dpd', {
     'Portal.view.ScanDocs.dpdViewModel',
     'Portal.view.ScanDocs.dpdViewController',
     'Ext.form.Panel',
+    'Ext.form.field.ComboBox',
     'Ext.form.field.Date',
+    'Ext.form.field.Number',
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
     'Ext.form.field.TextArea'
@@ -32,10 +34,11 @@ Ext.define('Portal.view.ScanDocs.dpd', {
     type: 'scandocs.dpd'
   },
   modal: true,
-  height: 331,
-  width: 450,
+  height: 464,
+  width: 481,
   layout: 'fit',
   title: 'Вносим ДПД - Только Отсканированные и Загруженные в Платформу',
+  maximizable: true,
 
   items: [
     {
@@ -43,25 +46,56 @@ Ext.define('Portal.view.ScanDocs.dpd', {
       reference: 'form',
       border: false,
       bodyPadding: 10,
+      layout: {
+        type: 'vbox',
+        align: 'stretch'
+      },
       items: [
+        {
+          xtype: 'combobox',
+          fieldLabel: 'Отдел',
+          labelWidth: 50,
+          name: 'otdel',
+          allowBlank: false,
+          editable: false,
+          autoLoadOnValue: true,
+          displayField: 'name',
+          store: 'ScanDocs.Otdel',
+          valueField: 'id'
+        },
         {
           xtype: 'datefield',
           fieldLabel: 'За какую дату вносим',
           labelWidth: 150,
           name: 'dpd_date',
           allowBlank: false,
+          editable: false,
           format: 'Y-m-d'
         },
         {
+          xtype: 'numberfield',
+          fieldLabel: 'Год, за который учитываем дело',
+          labelWidth: 200,
+          name: 'cyear',
+          allowBlank: false,
+          editable: false,
+          maxValue: 2025,
+          minValue: 1998
+        },
+        {
           xtype: 'textareafield',
-          anchor: '100%',
+          flex: 1,
           height: 207,
           scrollable: true,
           fieldLabel: 'Список кадастровых номеров',
           labelAlign: 'top',
           name: 'dpd_list',
           allowBlank: false,
-          emptyText: 'Обязательно:  1. Каждый номер отдельной строкой.    2. Можно с пробелами или двоеточиями. Другие символы не допускаются. 3. Внимательно смотрите отчет после внесения данных.'
+          emptyText: 'Обязательно: 1. Каждый номер отдельной строкой.    2. Можно с пробелами или двоеточиями. Другие символы не допускаются. 3. Внимательно смотрите отчет после внесения данных.'
+        },
+        {
+          xtype: 'container',
+          html: '<b>Форматы вносимых данных:</b><p>Кадастровый номер дела<br>или<br>Кадастровый номер дела = Номер тома<br>или<br>Кадастровый номер дела = Номер тома = Количество листов в томе</p>'
         }
       ],
       dockedItems: [

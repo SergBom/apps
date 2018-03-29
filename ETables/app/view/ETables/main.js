@@ -22,19 +22,24 @@ Ext.define('Portal.view.ETables.main', {
     'Portal.view.ETables.mainViewController',
     'Ext.grid.Panel',
     'Ext.grid.column.RowNumberer',
+    'Ext.grid.filters.filter.String',
     'Ext.view.Table',
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
     'Ext.selection.RowModel',
-    'Ext.grid.plugin.RowEditing'
+    'Ext.form.field.Checkbox',
+    'Ext.grid.filters.Filters',
+    'Ext.grid.plugin.RowEditing',
+    'Ext.form.field.Date',
+    'Ext.form.field.Hidden'
   ],
 
   controller: 'etables.main',
   viewModel: {
     type: 'etables.main'
   },
-  height: 398,
-  width: 588,
+  height: 451,
+  width: 978,
   layout: 'border',
   title: 'My Panel',
   defaultListenerScope: true,
@@ -45,23 +50,28 @@ Ext.define('Portal.view.ETables.main', {
       region: 'west',
       split: true,
       reference: 'tblMain',
-      width: 230,
+      width: 262,
       collapsible: true,
       title: 'Таблицы',
       store: 'ETables.tables',
       columns: [
         {
-          xtype: 'rownumberer',
-          dataIndex: 'string'
+          xtype: 'rownumberer'
         },
         {
           xtype: 'gridcolumn',
-          flex: 1,
           dataIndex: 'title',
-          text: 'Наименование'
+          flex: 1,
+          text: 'Наименование',
+          filter: {
+            type: 'string'
+          }
         }
       ],
       viewConfig: {
+        getRowClass: function(record, rowIndex, rowParams, store) {
+          return record.get('refer') > 0 ? 'green-row' : ''; // 'green-row';
+        },
         listeners: {
           selectionchange: {
             fn: 'onTableSelectionChange',
@@ -111,6 +121,7 @@ Ext.define('Portal.view.ETables.main', {
               reference: 'btnTEdit',
               disabled: true,
               iconCls: 'icon-edit',
+              tooltip: 'Свойства таблицы',
               listeners: {
                 click: {
                   fn: 'onEditClick',
@@ -122,10 +133,29 @@ Ext.define('Portal.view.ETables.main', {
               xtype: 'button',
               reference: 'btnTblEdit',
               disabled: true,
-              text: 'MyButton',
+              iconCls: 'icon-db',
+              tooltip: 'Структура таблицы',
               listeners: {
                 click: {
                   fn: 'onEditDBClick',
+                  scope: 'controller'
+                }
+              }
+            }
+          ]
+        },
+        {
+          xtype: 'toolbar',
+          dock: 'bottom',
+          items: [
+            {
+              xtype: 'checkboxfield',
+              reference: 'SayRefTables',
+              flex: 1,
+              boxLabel: 'Показать справочные таблицы',
+              listeners: {
+                change: {
+                  fn: 'onReferChange',
                   scope: 'controller'
                 }
               }
@@ -135,7 +165,13 @@ Ext.define('Portal.view.ETables.main', {
       ],
       selModel: {
         selType: 'rowmodel'
-      }
+      },
+      plugins: [
+        {
+          ptype: 'gridfilters',
+          id: 'mainFilter'
+        }
+      ]
     },
     {
       xtype: 'gridpanel',
@@ -144,9 +180,15 @@ Ext.define('Portal.view.ETables.main', {
       title: '*',
       columns: [
         {
+          xtype: 'rownumberer'
+        },
+        {
           xtype: 'gridcolumn',
-          dataIndex: 'string',
-          text: 'String'
+          text: 'MyColumn',
+          editor: {
+            xtype: 'datefield',
+            format: 'Y-m-d'
+          }
         }
       ],
       dockedItems: [
@@ -157,6 +199,7 @@ Ext.define('Portal.view.ETables.main', {
             {
               xtype: 'button',
               reference: 'tbAdd',
+              disabled: true,
               iconCls: 'icon-add',
               listeners: {
                 click: {
@@ -168,6 +211,7 @@ Ext.define('Portal.view.ETables.main', {
             {
               xtype: 'button',
               reference: 'tbDel',
+              disabled: true,
               iconCls: 'icon-delete',
               listeners: {
                 click: {
@@ -179,10 +223,22 @@ Ext.define('Portal.view.ETables.main', {
             {
               xtype: 'button',
               reference: 'tbRefresh',
+              disabled: true,
               iconCls: 'icon-refresh',
               listeners: {
                 click: {
                   fn: 'onTbRefreshClick',
+                  scope: 'controller'
+                }
+              }
+            },
+            {
+              xtype: 'button',
+              iconCls: 'filter-minus',
+              text: 'Очистить фильтр',
+              listeners: {
+                click: {
+                  fn: 'onMainFilterMinus',
                   scope: 'controller'
                 }
               }
@@ -193,11 +249,25 @@ Ext.define('Portal.view.ETables.main', {
       plugins: [
         {
           ptype: 'rowediting',
+          autoUpdate: true,
           listeners: {
-            edit: 'onRowEditingEdit'
+            beforeedit: 'onRowEditingBeforeEdit'
           }
+        },
+        {
+          ptype: 'gridfilters'
         }
-      ]
+      ],
+      selModel: {
+        selType: 'rowmodel',
+        mode: 'SINGLE'
+      },
+      listeners: {
+        selectionchange: {
+          fn: 'onMPSelectionChange',
+          scope: 'controller'
+        }
+      }
     },
     {
       xtype: 'panel',
@@ -205,6 +275,12 @@ Ext.define('Portal.view.ETables.main', {
       reference: 'pInfo',
       height: 61,
       scrollable: true
+    },
+    {
+      xtype: 'hiddenfield',
+      region: 'east',
+      width: 150,
+      fieldLabel: 'Label'
     }
   ],
   listeners: {
@@ -214,19 +290,17 @@ Ext.define('Portal.view.ETables.main', {
     }
   },
 
-  onRowEditingEdit: function(editor, context, eOpts) {
-    var r=this.getReferences(),
-        st=Ext.getStore('ETables.main'),
-        stR=r.MainPanel.getSelection()[0].data.id;
-    context.newValues._t=stR;
-    Ext.Ajax.request({
-        url:'data/ETables/table-upd.php',
-        params:context.newValues,
-        success:function(r){st.reload();}
-    });
-    //r.btnDelRecRef.setDisabled(true);
-    //r.btnAddRecRef.setDisabled(false);
-    //r.btnRefreshRef.setDisabled(false);
+  onRowEditingBeforeEdit: function(editor, context, eOpts) {
+    console.log('editor');
+    console.log(editor);
+
+
+    var id=this.getReferences().MainPanel.getMinWidth();
+        console.log('id='+id+'   context=');
+
+        context.record.data.a_id=id;
+        console.log(context);
+
   }
 
 });

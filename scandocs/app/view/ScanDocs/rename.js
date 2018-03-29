@@ -24,7 +24,8 @@ Ext.define('Portal.view.ScanDocs.rename', {
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
     'Ext.form.field.Hidden',
-    'Ext.form.field.Date'
+    'Ext.form.field.Date',
+    'Ext.form.field.ComboBox'
   ],
 
   controller: 'scandocs.rename',
@@ -32,7 +33,7 @@ Ext.define('Portal.view.ScanDocs.rename', {
     type: 'scandocs.rename'
   },
   modal: true,
-  height: 159,
+  height: 218,
   width: 400,
   layout: 'fit',
   iconCls: 'icon-edit',
@@ -105,7 +106,33 @@ Ext.define('Portal.view.ScanDocs.rename', {
           xtype: 'datefield',
           anchor: '100%',
           fieldLabel: 'Дата учета',
-          name: 'cdate'
+          name: 'cdate',
+          editable: false,
+          format: 'Y-m-d',
+          submitFormat: 'Y-m-d'
+        },
+        {
+          xtype: 'combobox',
+          anchor: '100%',
+          fieldLabel: 'Отдел',
+          name: 'n1',
+          allowBlank: false,
+          editable: false,
+          autoLoadOnValue: true,
+          displayField: 'name',
+          store: 'ScanDocs.Otdel',
+          valueField: 'id'
+        },
+        {
+          xtype: 'combobox',
+          anchor: '100%',
+          fieldLabel: 'Год, за который учитываем дело',
+          labelWidth: 200,
+          name: 'cyear',
+          autoLoadOnValue: true,
+          displayField: 'name',
+          store: 'ScanDocs.cyears',
+          valueField: 'id'
         }
       ]
     }

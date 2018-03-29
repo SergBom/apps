@@ -5,7 +5,7 @@ header('Content-type: text/html; charset=utf-8');
 /*-------------------------- Входные переменные -----------------------------*/
 
 	$data = array();
-	//$a = (object)$_GET; //json_decode($info);
+	$a = (object)$_REQUEST;
 	
 /*---------------------------------------------------------------------------*/
 
@@ -13,25 +13,12 @@ header('Content-type: text/html; charset=utf-8');
 
 /*---------------------------------------------------------------------------*/
 
-
-	$sql = "SELECT * FROM `A_Tables`";
-	$data = $db->query( $sql )->fetchAll(); //PDO::FETCH_COLUMN);
-/*
-	$sql = "show table status where substr(name,1,2)='tb'";
-	$st = $db->query( $sql );
+	$refer  = ( isset($a->refer) ) ? ( $a->refer=='true' ) ? 1:0 :0;
 	
-	while( $row = $st->fetch() ){
 
-		$cmt = @explode('|',$row['Comment']);
 
-		$data[] = array(
-			'id'=>$row['Name'],
-			'name'=>$row['Name'],
-			'title'=>@$cmt[0],
-			'info'=>@$cmt[1]
-		);
-	}
-	*/
+	$sql = "SELECT * FROM `A_Tables` WHERE del=0 AND refer=$refer";
+	$data = $db->query( $sql )->fetchAll();
 	
 	echo json_encode(array('success'=>'true','data'=>$data));
 

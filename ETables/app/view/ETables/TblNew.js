@@ -24,7 +24,8 @@ Ext.define('Portal.view.ETables.TblNew', {
     'Ext.form.field.TextArea',
     'Ext.toolbar.Toolbar',
     'Ext.button.Button',
-    'Ext.form.field.Hidden'
+    'Ext.form.field.Hidden',
+    'Ext.form.field.Checkbox'
   ],
 
   controller: 'etables.tblnew',
@@ -32,7 +33,7 @@ Ext.define('Portal.view.ETables.TblNew', {
     type: 'etables.tblnew'
   },
   modal: true,
-  height: 231,
+  height: 288,
   width: 531,
   layout: 'fit',
   title: 'Новая таблица',
@@ -57,7 +58,7 @@ Ext.define('Portal.view.ETables.TblNew', {
         {
           xtype: 'textareafield',
           anchor: '100%',
-          height: 103,
+          height: 125,
           fieldLabel: 'Описание таблицы',
           labelAlign: 'top',
           name: 'info'
@@ -67,6 +68,13 @@ Ext.define('Portal.view.ETables.TblNew', {
           anchor: '100%',
           fieldLabel: 'Label',
           name: 'id'
+        },
+        {
+          xtype: 'checkboxfield',
+          anchor: '100%',
+          fieldLabel: 'Тип таблицы',
+          name: 'refer',
+          boxLabel: 'Справочная'
         }
       ],
       dockedItems: [

@@ -18,55 +18,82 @@ Ext.define('Portal.view.ETables.mainViewController', {
   alias: 'controller.etables.main',
 
   onTableSelectionChange: function(model, selected, eOpts) {
-    var r=this.getReferences(),db=selected[0].data,mp=r.MainPanel;
-    r.pInfo.setHtml(db.info);
-    //console.log(selected);
+    var r=this.getReferences();//,db=selected[0].data,mp=r.MainPanel;
+    if(selected[0]){r.pInfo.setHtml(selected[0].data.info);}
     r.btnTblEdit.setDisabled(false);
     r.btnTEdit.setDisabled(false);
     r.btnDelete.setDisabled(false);
   },
 
   onTableItemDblClick: function(dataview, record, item, index, e, eOpts) {
-    var r=this.getReferences(),db=record.data,mp=r.MainPanel,
-      newcolumns=[{xtype:'rownumberer'}],mc=[],
-      MainStore=Ext.getStore('ETables.main'),
-      MainModel=MainStore.getModel();
-    FieldStore=this.getStore('tbFields');
+    var ref=this.getReferences(),db=record.data,P=ref.MainPanel,
+      newcols=[{xtype:'rownumberer'}],mc=[],
+      SM=Ext.getStore('ETables.main'),M=SM.getModel(),
+      SF=this.getStore('tbFields');
 
-    mp.setConfig({itemId:db.id});
+    console.log('a_id='+db.id);
+    P.setMinWidth(db.id);
+    P.setTitle(db.title);
 
-    console.log(MainModel);
-    mp.setTitle(db.title);
+    SF.load({params:{a_id:db.id},scope:this,callback:function(records,o,success){
 
-    FieldStore.load({params:{main_id:db.id},scope:this,
-    callback:function(records,o,success){
-      //console.log(records);
-      FieldStore.each(function(rec){
-        //console.log(rec);
-        var tempvar={},r=rec.data;
-        console.log(r.field_name);
-        if(r.field_name != 'id'){
-          tempvar={
-            dataIndex:r.field_name,
-            tooltip: r.field_name,
-            header: r.field_title,
-            name: r.field_name,
-            xtype:record.get('xtype') //'checkcolumn'
-            //            width:100
-          };
-          newcolumns.push(tempvar);
-        }
-        mc.push({
+    SF.each(function(rec){
+
+      var tvar={},r=rec.data;
+      console.log(r);
+
+      if(r.field_name!='id'){
+
+
+        tvar={
+          dataIndex:r.field_name,
+          tooltip:r.field_name,
+          header:r.field_title,
           name:r.field_name,
-          type:r.xtype
-        });
-      });
+          xtype:r.xtype,
+          editor:{xtype:r.editor,allowBlank:r.allowBlank}
+        };
 
-      //MainModel.setConfig({fields:mc});
-      mp.reconfigure(MainStore, newcolumns);
-      console.log(MainModel);
-    }});
-    MainStore.load({params:{id:db.id}});
+        tvar.format=r.format;
+        tvar.editor.format=r.format;
+        if(r.width){tvar.width=Number(r.width);}
+        if(r.filter_type){
+          //if(r.xtype!='datecolumn'){
+        tvar.filter=r.filter_type;//}
+      }//else{tvar.filter='string';}
+
+        newcols.push(tvar);
+
+        //Set Model data
+        if(r.xtype=='datecolumn'){
+          mc.push({
+            name:r.field_name,
+            type:'date',
+            dateFormat:'Y-m-d'
+          });
+
+        } else {
+          mc.push({
+            name:r.field_name  //type:r.xtype
+          });
+        }
+
+
+      }else{
+        mc.push({name:'id'});
+      }
+
+    });
+
+    mc.push({name:'a_id',defaultValue:db.id});
+    M.addFields(mc);
+    P.reconfigure(SM,newcols);
+    //console.log(P.getColumns());
+
+  }});
+  SM.load({params:{a_id:db.id}});
+  ref.tbAdd.setDisabled(false);
+  ref.tbRefresh.setDisabled(false);
   },
 
   onTAddClick: function(button, e, eOpts) {
@@ -86,55 +113,18 @@ Ext.define('Portal.view.ETables.mainViewController', {
 
   onEditDBClick: function(button, e, eOpts) {
     var d=this.getReferences().tblMain.getSelection()[0].data,
-      w=Ext.create('Portal.view.ETables.TblEdit',{itemId:d.id});
-    w.setTitle(d.title);
-    w.show();
+      w=Ext.create('Portal.view.ETables.TblEdit',{minWidth:d.id,title:d.title}).show();
+  },
+
+  onReferChange: function(field, newValue, oldValue, eOpts) {
+    Ext.getStore('ETables.tables').load({params:{refer:newValue}});
   },
 
   onTbAddClick: function(button, e, eOpts) {
-    var r=this.getReferences(),tb=r.MainPanel,st=Ext.getStore('ETables.main'),
-      id=tb.getItemId();
-
-    /*
-    var M=Ext.data.schema.Schema.instances.default.hasEntity('Portal.model.ETables.main');
-    console.log(M);
-
-
-    Ext.Ajax.request({
-    url: 'data/ETables/getModelMain.php?main_id='+id,
-
-    success: function(response, opts) {
-    var obj = Ext.decode(response.responseText);
-    console.dir(obj.data);
-
-    eval(obj.data);
-
-    st.insert(0, rec);
-    tb.findPlugin('rowediting').startEdit(rec, 0);
-    },
-
-    failure: function(response, opts) {
-    console.log('server-side failure with status code ' + response.status);
-    }
-    });
-
-    */
-
-    //console.log(st.getModel());
-
-    console.log(st.getFields());
-    st.insert(0); //, {id:0});
-    tb.getView().select(0);
-    var rec=tb.getSelection()[0];
-    //u=tb.findPlugin('rowediting').startEdit(rec, 0);
-
-    console.log(rec);
-    //var view=this.getView();
-    /*var rec = new Portal.model.ETables.TblFileds({
-    id:0
-    });*/
-
-
+    var P=this.getReferences().MainPanel,S=Ext.getStore('ETables.main'),
+      rec=new Portal.model.ETables.main({id:0,a_id:P.getMinWidth()});
+    S.insert(0,rec);
+    P.findPlugin('rowediting').startEdit(rec,0);
   },
 
   onTbDelClick: function(button, e, eOpts) {
@@ -143,6 +133,14 @@ Ext.define('Portal.view.ETables.mainViewController', {
 
   onTbRefreshClick: function(button, e, eOpts) {
     Ext.getStore('ETables.main').reload();
+  },
+
+  onMainFilterMinus: function(button, e, eOpts) {
+    this.getReferences().MainPanel.getPlugin('mainFilter').clearFilters();
+  },
+
+  onMPSelectionChange: function(model, selected, eOpts) {
+    this.getReferences().tbDel.setDisabled(false);
   },
 
   onPanelAfterRender: function(component, eOpts) {

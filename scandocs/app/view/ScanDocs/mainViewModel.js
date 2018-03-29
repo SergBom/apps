@@ -174,6 +174,50 @@ Ext.define('Portal.view.ScanDocs.mainViewModel', {
           name: 'summa'
         }
       ]
+    },
+    sotr: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/getSotr.php',
+        reader: {
+          type: 'json',
+          rootProperty: 'data'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'name'
+        }
+      ]
+    },
+    statSotr: {
+      proxy: {
+        type: 'ajax',
+        url: 'data/ScanDocs/StatSotr.php',
+        reader: {
+          type: 'json'
+        }
+      },
+      fields: [
+        {
+          name: 'id'
+        },
+        {
+          name: 'fio'
+        },
+        {
+          name: 'otdel'
+        },
+        {
+          name: 'toms'
+        },
+        {
+          name: 'cnt_lists'
+        }
+      ]
     }
   }
 

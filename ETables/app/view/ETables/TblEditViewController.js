@@ -18,16 +18,16 @@ Ext.define('Portal.view.ETables.TblEditViewController', {
   alias: 'controller.etables.tbledit',
 
   onAddClick: function(button, e, eOpts) {
-    console.log(this.getView().getItemId());
-    var view=this.getView(),
-      rec = new Portal.model.ETables.TblFileds({
-        a_id:view.getItemId(),
-        field_title:'',
-        field_type:'VARCHAR',
-        field_len:20,
-        field_order:0,
-        id:0
-      });
+    console.log('Таблица в записи = ' + this.getView().getMinWidth());
+
+    var rec = new Portal.model.ETables.TblFileds({
+      a_id:this.getView().getMinWidth(),
+      field_title:'',
+      field_type:'VARCHAR',
+      field_len:20,
+      field_order:0,
+      id:0
+    });
 
     this.getStore('fields').insert(0, rec);
     this.getReferences().table.findPlugin('rowediting').startEdit(rec, 0);
@@ -38,7 +38,7 @@ Ext.define('Portal.view.ETables.TblEditViewController', {
   },
 
   onRefreshClick: function(button, e, eOpts) {
-    this.getStore('fields').reload(this.getView().getItemId());
+    this.getStore('fields').reload(this.getView().getMinWidth());
   },
 
   onGridSelectionChange: function(model, selected, eOpts) {
@@ -46,9 +46,13 @@ Ext.define('Portal.view.ETables.TblEditViewController', {
   },
 
   onWindowAfterRender: function(component, eOpts) {
-    var m=this,id=m.getView().getItemId();
+    var m=this,id=m.getView().getMinWidth();
     m.getStore('fields').load(
     {params:{main_id:id}});
+  },
+
+  onRiskClick: function(button, e, eOpts) {
+    this.getReferences().table.setDisabled(false);
   }
 
 });

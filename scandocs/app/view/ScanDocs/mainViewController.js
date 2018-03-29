@@ -18,68 +18,33 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
   alias: 'controller.scandocsmain',
 
   ShowCadNums: function(filter) {
-    var r=this.getReferences(),
-        frm=r.formPanel.getForm(),
-        o=r.FilterOpis.getValue(),
-        fr=r.FilterRetro.getValue(),
-        s=r.seek.getValue();
-    Ext.getStore('ScanDocs.MainData').loadPage(1,{params:{
-    dateBegin:frm.findField('dateBegin').getValue(),
-    dateEnd:frm.findField('dateEnd').getValue(),
-    Otdel:frm.findField('Otdel').getValue(),
-    cyear:'',opis:o,retro:fr,filter:s,
-        limit:25,start:0
-    }});
+    var r=this.getReferences(),s=Ext.getStore('ScanDocs.MainData'),frm=JSON.stringify(r.formPanel.getForm().getFieldValues()),d=r.detailPanel.getForm();
+    d.setValues({count_dpd:'считаю...',count_opis:'считаю...',count_retro:'считаю...'});
+    s.getProxy().setConfig({extraParams:{
+    frm:frm,
+    opis:r.FilterOpis.getValue(),
+    retro:r.FilterRetro.getValue(),
+    filter:r.seek.getValue()}});
+    s.loadPage(1);
+    d.load({params:{f:frm}});
   },
 
   onCalcClick: function(button, e, eOpts) {
-    var r=this.getReferences(),f=r.formPanel.getForm();
-    r.detailPanel.getForm().setValues({
-      count_dpd:'считаю...',
-      count_opis:'считаю...',
-      count_retro:'считаю...'
-    });
-
-    r.detailPanel.getForm().load({
-      params:{
-        dateBegin:f.findField('dateBegin').getValue(),
-        dateEnd:f.findField('dateEnd').getValue(),
-        Otdel:f.findField('Otdel').getValue(),
-        cyear:f.findField('cyear').getValue()
-      }
-    });
-    this.onButtonClick();
+    this.ShowCadNums();
   },
 
   onResetClick: function(button, e, eOpts) {
     var r=this.getReferences();
     r.formPanel.getForm().reset();
-    r.detailPanel.getForm().load();
-    Ext.getStore('ScanDocs.MainData').setConfig({
-      otdel:'',
-    });
-
-    Ext.getStore('ScanDocs.MainData').loadPage(1);
-  },
-
-  onPTbarChange: function(pagingtoolbar, pageData, eOpts) {
-    var r=this.getReferences(),
-      frm=r.formPanel.getForm(),
-      o=r.FilterOpis.getValue(),
-      fr=r.FilterRetro.getValue(),
-      s=r.seek.getValue();
-    Ext.getStore('ScanDocs.MainData').getProxy().setConfig({extraParams:{
-      dateBegin:frm.findField('dateBegin').getValue(),
-      dateEnd:frm.findField('dateEnd').getValue(),
-      Otdel:frm.findField('Otdel').getValue(),
-    cyear:'',opis:o,retro:fr,filter:s}});
+    r.seek.setValue('');
+    this.ShowCadNums();
   },
 
   onTextfieldSpecialkey: function(field, e, eOpts) {
-    if(e.getKey()===e.ENTER){this.onButtonClick();}
+    if(e.getKey()===e.ENTER){this.onSeek();}
   },
 
-  onButtonClick: function(button, e, eOpts) {
+  onSeek: function(button, e, eOpts) {
     this.ShowCadNums();
   },
 
@@ -143,13 +108,31 @@ Ext.define('Portal.view.ScanDocs.mainViewController', {
     this.getStore('vYears').load();
   },
 
+  onOtdel: function(field, newValue, oldValue, eOpts) {
+    /*this.getReferences().sotr.setDisabled(!newValue);
+    if(newValue){
+    //  this.getReferences().sotr.setDisabled(false);
+    this.getViewModel().getStore('sotr').load({params:{otdel:newValue}});
+
+  }*/
+  },
+
+  onSaySotr: function(button, e, eOpts) {
+    var f=this.getReferences().formStatSotr.getForm();
+    console.log(f);
+    this.getViewModel().setStore('statSotr').load(
+
+    );
+  },
+
   onPanelAfterRender: function(component, eOpts) {
     var AccessEdit = Portal.util.Util.appAccessEdit(this.getView().xtype),
       ref=this.getReferences();
     ref.TabMain.setActiveTab(ref.TabStat);
     //ref.TabError.setHidden( !AccessEdit );
-    ref.detailPanel.getForm().load();
-    Ext.getStore('ScanDocs.MainData').load();
+    this.onCalcClick();
+    //ref.detailPanel.getForm().load();
+    //this.ShowCadNums();
   }
 
 });

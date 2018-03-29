@@ -24,12 +24,14 @@ Ext.define('Portal.controller.ScanDocs.ScanDocs', {
   stores: [
     'ScanDocs.MainData',
     'ScanDocs.District',
-    'ScanDocs.Otdel'
+    'ScanDocs.Otdel',
+    'ScanDocs.cyears'
   ],
   views: [
     'ScanDocs.main',
     'ScanDocs.Files',
     'ScanDocs.dpd',
-    'ScanDocs.rename'
+    'ScanDocs.rename',
+    'ScanDocs.Tom'
   ]
 });

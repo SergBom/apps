@@ -5,7 +5,31 @@ header('Content-type: text/html; charset=utf-8');
 $db = ConnectPDO('ETables');
 //var_dump( $_POST);
 
+
+/**********
+	Приходят данные:
+
+	{
+		"id":15,
+		"a_id":"2",
+		"field_name":"fld54307",
+		"field_title":"\u041f\u043e\u043b\u04353\u0444",
+		"field_type":"VARCHAR",
+		"field_len":23,
+		"field_PK":"0",
+		"field_INDEX":"0",
+		"field_order":0,
+		"xtype":"gridcolumn",
+		"editor":null,
+		"allowBlank":null
+	}
+
+*/
+
+
 $j = json_decode($_POST['data']);
+
+
 
 //var_dump($j);
 // ALTER TABLE `tb00000001`	ADD COLUMN `fff` DATE NULL				 		AFTER `fld36257`;
@@ -15,14 +39,26 @@ $j = json_decode($_POST['data']);
 // ALTER TABLE `tb00000001`	ADD COLUMN `fff` FLOAT NULL DEFAULT NULL 		AFTER `fff`;
 
 $a_type = array(
-	'VARCHAR'=>array("VARCHAR({$j->field_len}) NULL DEFAULT NULL",$j->field_len,"gridcolumn"),
-	'DATE'=>array('DATE NULL',0,"datecolumn"),
-	'TIME'=>array('TIME NULL DEFAULT NULL',0,"datecolumn"),
-	'INT'=>array('INT NULL DEFAULT NULL',0,"numbercolumn"),
-	'FLOAT'=>array('FLOAT NULL DEFAULT NULL',0,"numbercolumn")
+// [0]Тип поля, [1]Длина поля, [2]Тип колонки(grid), [3]Редактор(grid), [4]Фильтр
+	'VARCHAR'=>array("VARCHAR({$j->field_len}) NULL DEFAULT NULL",$j->field_len,"gridcolumn","textfield","string"),
+	'DATE'=>array('DATE NULL',0,"datecolumn","datefield","date"),
+	'TIME'=>array('TIME NULL DEFAULT NULL',0,"datecolumn","datefield","string"),
+	'INT'=>array('INT NULL DEFAULT NULL',0,"numbercolumn","numberfield","number"),
+	'FLOAT'=>array('FLOAT NULL DEFAULT NULL',0,"numbercolumn","numberfield","string"),
+	'BOOLEAN'=>array('BIT NULL DEFAULT NULL',0,"booleancolumn","booleanfield","boolean")
+	
 );
 
 $field_len = $a_type[$j->field_type][1];
+
+
+//editor
+//allowBlank
+$a_editor = array(
+	''
+);
+
+
 
 
 if ($j->id == 0 ){
@@ -38,7 +74,10 @@ if ($j->id == 0 ){
 			field_type='{$j->field_type}',
 			field_len='{$a_type[$j->field_type][1]}',
 			xtype='{$a_type[$j->field_type][2]}',
-			field_order={$j->field_order}
+			field_order={$j->field_order},
+			`editor`='{$j->editor}',
+			`allowBlank`='{$j->allowBlank}',
+			`filter_type`='{$a_type[$j->field_type][4]}'
 			");
 			
 		$id = $db->lastInsertId();
@@ -59,7 +98,10 @@ if ($j->id == 0 ){
 			field_type='{$j->field_type}',
 			field_len='{$a_type[$j->field_type][1]}',
 			xtype='{$a_type[$j->field_type][2]}',
-			field_order='{$j->field_order}'
+			field_order='{$j->field_order}',
+			`editor`='{$j->editor}',
+			`allowBlank`='{$j->allowBlank}',
+			`filter_type`='{$a_type[$j->field_type][4]}'
 			WHERE id={$j->id}
 			");
 

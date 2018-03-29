@@ -27,7 +27,7 @@ Ext.application({
 
   launch: function() {
     Ext.create('Portal.view.ScanDocs.main', {renderTo: Ext.getBody()});
-    Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+    //Ext.direct.Manager.addProvider(Ext.REMOTING_API);
   }
 
 });

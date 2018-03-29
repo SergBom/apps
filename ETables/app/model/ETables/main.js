@@ -23,7 +23,8 @@ Ext.define('Portal.model.ETables.main', {
 
   fields: [
     {
-      name: 'fld610'
+      defaultValue: 0,
+      name: 'id'
     }
   ]
 });
